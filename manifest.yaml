@@ -1,0 +1,95 @@
+
+id: webtop 
+title: "Webtop"
+version: 4.16.92
+release-notes: "Webtop for emabssyOS 0.3.4"
+license: GPLv3
+wrapper-repo: "https://github.com/Start9Labs/webtop-wrapper"
+upstream-repo: "https://github.com/linuxserver/docker-webtop"
+support-site: "https://github.com/linuxserver/docker-webtop/issues"
+marketing-site: "https://github.com/linuxserver/docker-webtop"
+donation-url: "https://www.linuxserver.io/donate/"
+build: ["make"]
+description:
+  short: Webtop - A Linux Desktop Environment In Your Browser
+  long: |
+    Webtop is an innovative Linux desktop environment that allows users to access a complete Linux desktop directly from their web browser.
+    With Webtop, you no longer need to install or configure any software on your local machine to use Linux.
+assets:
+  license: LICENSE
+  icon: icon.png
+  instructions: instructions.md
+main:
+  type: docker
+  image: main
+  entrypoint: "docker_entrypoint.sh"
+  args: []
+  mounts:
+    main: /root/data
+health-checks:
+  web-ui:
+    name: Webtop Interface
+    success-message: Ready to visit in a web browser or RDP client
+    type: script
+config:
+  get:
+    type: script
+  set:
+    type: script
+properties: ~
+volumes:
+  main:
+    type: data
+interfaces:
+  main:
+    name: User Interface
+    description: Web user interface to display your Webtop Desktop
+    tor-config:
+      port-mapping:
+        80: "3000"
+        3389: "3389"
+    lan-config:
+      443:
+        ssl: true
+        internal: 3000
+    ui: true
+    protocols:
+      - tcp
+      - http
+dependencies: {}
+backup:
+  create:
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - create
+      - /mnt/backup
+      - /root/data
+    mounts:
+      BACKUP: /mnt/backup
+      main: /root/data
+  restore:
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - restore
+      - /mnt/backup
+      - /root/data
+    mounts:
+      BACKUP: /mnt/backup
+      main: /root/data
+migrations:
+  from:
+    "*":
+      type: script
+      args: ["from"]
+  to:
+    "*":
+      type: script
+      args: ["to"]
