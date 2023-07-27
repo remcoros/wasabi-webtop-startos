@@ -1,9 +1,36 @@
-FROM lscr.io/linuxserver/webtop:latest
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:alpine318
 
-RUN apk update
-RUN apk add --no-cache yq && \
-    rm -f /var/cache/apk/*
+ARG BUILD_DATE
+ARG VERSION
+ARG XFCE_VERSION
 
-RUN echo -e "\nWebtop for embassyOS is starting ..." > /etc/s6-overlay/s6-rc.d/init-adduser/branding; sed -i '/run_branding() {/,/}/d' /docker-mods
+RUN \
+  echo "**** install packages ****" && \
+  apk add --no-cache \
+    firefox \
+    yq \
+    faenza-icon-theme \
+    faenza-icon-theme-xfce4-appfinder \
+    faenza-icon-theme-xfce4-panel \
+    mousepad \
+    ristretto \
+    thunar \
+    util-linux-misc \
+    xfce4 \
+    xfce4-terminal && \
+  echo "**** cleanup ****" && \
+  rm -f \
+    /etc/xdg/autostart/xfce4-power-manager.desktop \
+    /etc/xdg/autostart/xscreensaver.desktop \
+    /usr/share/xfce4/panel/plugins/power-manager-plugin.desktop && \
+  rm -rf \
+    /config/.cache \
+    /tmp/*
+
+COPY /root /
+RUN mkdir -p /root/data
+VOLUME /config
+
+RUN echo -e "\nStarting Webtop for StartOS ..." > /etc/s6-overlay/s6-rc.d/init-adduser/branding; sed -i '/run_branding() {/,/}/d' /docker-mods
 ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker_entrypoint.sh

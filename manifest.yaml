@@ -1,10 +1,10 @@
 
 id: webtop 
 title: "Webtop"
-version: 4.16.92
-release-notes: "Webtop for emabssyOS 0.3.4"
+version: 3.18.12
+release-notes: "Webtop for StartOS"
 license: GPLv3
-wrapper-repo: "https://github.com/Start9Labs/webtop-wrapper"
+wrapper-repo: "https://github.com/k0gen/webtop-wrapper"
 upstream-repo: "https://github.com/linuxserver/docker-webtop"
 support-site: "https://github.com/linuxserver/docker-webtop/issues"
 marketing-site: "https://github.com/linuxserver/docker-webtop"
@@ -26,19 +26,24 @@ main:
   args: []
   mounts:
     main: /root/data
+    userdir: /config
+  gpu-acceleration: true
 health-checks:
   web-ui:
     name: Webtop Interface
-    success-message: Ready to visit in a web browser or RDP client
+    success-message: Ready to be visited in a web browser
     type: script
 config:
   get:
     type: script
   set:
     type: script
-properties: ~
+properties:
+  type: script
 volumes:
   main:
+    type: data
+  userdir:
     type: data
 interfaces:
   main:
@@ -47,7 +52,6 @@ interfaces:
     tor-config:
       port-mapping:
         80: "3000"
-        3389: "3389"
     lan-config:
       443:
         ssl: true
@@ -68,9 +72,11 @@ backup:
       - create
       - /mnt/backup
       - /root/data
+      - /config
     mounts:
       BACKUP: /mnt/backup
       main: /root/data
+      userdir: /config
   restore:
     type: docker
     image: compat
@@ -81,9 +87,11 @@ backup:
       - restore
       - /mnt/backup
       - /root/data
+      - /config
     mounts:
       BACKUP: /mnt/backup
       main: /root/data
+      userdir: /config
 migrations:
   from:
     "*":

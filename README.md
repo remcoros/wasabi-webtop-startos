@@ -1,6 +1,6 @@
 # Wrapper for webtop
 
-Webtop is a simple, minimal project that serves as a template for creating a service that runs on embassyOS. This repository creates the `s9pk` package that is installed to run `webtop` on [embassyOS](https://github.com/Start9Labs/embassy-os/). Learn more about service packaging in the [Developer Docs](https://start9.com/latest/developer-docs/).
+Webtop is an innovative Linux desktop environment that allows users to access a complete Linux desktop directly from their web browser. This repository creates the `s9pk` package that is installed to run `Webtop` on [StartOS](https://github.com/Start9Labs/embassy-os/). Learn more about service packaging in the [Developer Docs](https://start9.com/latest/developer-docs/).
 
 ## Dependencies
 
@@ -11,10 +11,10 @@ Install the system dependencies below to build this project by following the ins
 - [yq](https://mikefarah.gitbook.io/yq)
 - [deno](https://deno.land/)
 - [make](https://www.gnu.org/software/make/)
-- [embassy-sdk](https://github.com/Start9Labs/embassy-os/tree/master/backend)
+- [embassy-sdk](https://github.com/Start9Labs/start-os/tree/master/backend)
 
 ## Build environment
-Prepare your embassyOS build environment. In this example we are using Ubuntu 20.04.
+Prepare your StartOS build environment. In this example we are using Ubuntu 20.04.
 1. Install docker
 ```
 curl -fsSL https://get.docker.com -o- | bash
@@ -50,8 +50,8 @@ source $HOME/.cargo/env
 ```
 8. Build and install embassy-sdk
 ```
-cd ~/ && git clone --recursive https://github.com/Start9Labs/embassy-os.git
-cd embassy-os/backend/
+cd ~/ && git clone --recursive https://github.com/Start9Labs/start-os.git
+cd start-os/backend/
 ./install-sdk.sh
 embassy-sdk init
 ```
@@ -62,7 +62,7 @@ Now you are ready to build the `webtop` package!
 Clone the project locally:
 
 ```
-git clone https://github.com/Start9Labs/webtop-wrapper.git
+git clone https://github.com/k0gen/webtop-wrapper.git
 cd webtop-wrapper
 git submodule update --init --recursive
 ```
@@ -87,15 +87,15 @@ or
 make ARCH=aarch64
 ```
 
-## Installing (on embassyOS)
+## Installing (on StartOS)
 
 Run the following commands to determine successful install:
-> :information_source: Change embassy-server-name.local to your Embassy address
+> :information_source: Change server-name.local to your Start9 server address
 
 ```
 embassy-cli auth login
-# Enter your embassy password
-embassy-cli --host https://embassy-server-name.local package install webtop.s9pk
+# Enter your StartOS password
+embassy-cli --host https://server-name.local package install webtop.s9pk
 ```
 
 If you already have your `embassy-cli` config file setup with a default `host`, you can install simply by running:
@@ -108,6 +108,6 @@ make install
 
 ### Verify Install
 
-Go to your Embassy Services page, select **Webtop**, configure and start the service. Then, verify its interfaces are accessible.
+Go to your StartOS Services page, select **Webtop**, configure and start the service. Then, verify its interfaces are accessible.
 
 **Done!** 
