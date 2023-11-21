@@ -4,6 +4,8 @@ ARG BUILD_DATE
 ARG VERSION
 ARG XFCE_VERSION
 
+ENV LANG=C.UTF-8
+
 RUN \
   echo "**** install packages ****" && \
   apk add --no-cache \
