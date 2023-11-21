@@ -10,6 +10,7 @@ RUN \
   echo "**** install packages ****" && \
   apk add --no-cache \
     firefox \
+    libpcap \
     yq \
     faenza-icon-theme \
     faenza-icon-theme-xfce4-appfinder \
