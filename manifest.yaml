@@ -4,7 +4,7 @@ title: "Webtop"
 version: 3.18.31
 release-notes: "Webtop for StartOS"
 license: GPLv3
-wrapper-repo: "https://github.com/k0gen/webtop-wrapper"
+wrapper-repo: "https://github.com/k0gen/webtop-startos"
 upstream-repo: "https://github.com/linuxserver/docker-webtop"
 support-site: "https://github.com/linuxserver/docker-webtop/issues"
 marketing-site: "https://github.com/linuxserver/docker-webtop"
