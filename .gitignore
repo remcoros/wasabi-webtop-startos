@@ -1,4 +1,4 @@
-webtop.s9pk
+*.s9pk
 .vscode/
 .DS_Store
 scripts/*.js
