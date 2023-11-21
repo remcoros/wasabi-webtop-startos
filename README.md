@@ -1,4 +1,8 @@
-# Wrapper for webtop
+<p align="center">
+  <img src="icon.png" alt="Project Logo" width="21%">
+</p>
+
+# Webtop for StartOS
 
 Webtop is an innovative Linux desktop environment that allows users to access a complete Linux desktop directly from their web browser. This repository creates the `s9pk` package that is installed to run `Webtop` on [StartOS](https://github.com/Start9Labs/start-os/). Learn more about service packaging in the [Developer Docs](https://start9.com/latest/developer-docs/).
 
