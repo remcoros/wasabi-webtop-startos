@@ -35,5 +35,6 @@ RUN mkdir -p /root/data
 VOLUME /config
 
 RUN echo -e "\nStarting Webtop for StartOS ..." > /etc/s6-overlay/s6-rc.d/init-adduser/branding; sed -i '/run_branding() {/,/}/d' /docker-mods
-ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
-RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
+COPY --chmod=a+x ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
+COPY --chmod=664 icon.png /kclient/public/icon.png
+COPY --chmod=664 icon.png /kclient/public/favicon.ico
