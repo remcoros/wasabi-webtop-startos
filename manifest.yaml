@@ -28,6 +28,10 @@ main:
     main: /root/data
     userdir: /config
   gpu-acceleration: true
+hardware-requirements:
+  arch:
+    - x86_64
+    - aarch64
 health-checks:
   web-ui:
     name: Webtop Interface
