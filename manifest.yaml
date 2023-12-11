@@ -27,7 +27,7 @@ main:
   mounts:
     main: /root/data
     userdir: /config
-  gpu-acceleration: true
+  gpu-acceleration: false
 hardware-requirements:
   arch:
     - x86_64
