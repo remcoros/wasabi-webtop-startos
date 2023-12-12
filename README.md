@@ -15,7 +15,7 @@ Install the system dependencies below to build this project by following the ins
 - [yq](https://mikefarah.gitbook.io/yq)
 - [deno](https://deno.land/)
 - [make](https://www.gnu.org/software/make/)
-- [start-sdk](https://github.com/Start9Labs/start-os/sdk/master/backend)
+- [start-sdk](https://github.com/Start9Labs/start-os/tree/sdk)
 
 ## Cloning
 
