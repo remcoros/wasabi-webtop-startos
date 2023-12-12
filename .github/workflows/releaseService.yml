@@ -62,4 +62,9 @@ jobs:
           S9USER: ${{ secrets.S9USER }}
           S9PASS: ${{ secrets.S9PASS }}
           S9REGISTRY: ${{ secrets.S9REGISTRY }}
-        run: start-sdk publish https://$S9USER:$S9PASS@$S9REGISTRY ${{ steps.package.outputs.package_id }}.s9pk
+        run: |
+          if [[ -z "$S9USER" || -z "$S9PASS" || -z "$S9REGISTRY" ]]; then
+            echo "Publish skipped: missing registry credentials."
+          else
+            start-sdk publish https://$S9USER:$S9PASS@$S9REGISTRY ${{ steps.package.outputs.package_id }}.s9pk
+          fi
