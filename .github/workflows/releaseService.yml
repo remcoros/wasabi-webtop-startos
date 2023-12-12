@@ -8,6 +8,8 @@ on:
 jobs:
   ReleasePackage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Prepare StartOS SDK
         uses: Start9Labs/sdk@v1
