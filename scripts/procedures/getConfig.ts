@@ -1,12 +1,12 @@
-import { compat } from "../deps.ts";
+import { compat, types as T } from "../deps.ts";
 
-export const getConfig = compat.getConfig({
+export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   "title": {
     "type": "string",
     "nullable": false,
     "name": "Webtop Title",
     "description": "This value will be displayed as the title of your browser tab.",
-    "default": "Start9 Webtop",
+    "default": "Start9 Sparrow on Webtop",
     "pattern": "^[^\\n\"]*$",
     "pattern-description": "Must not contain newline or quote characters.",
     "masked": false,
@@ -37,5 +37,4 @@ export const getConfig = compat.getConfig({
     "pattern-description": "Must not contain newline or quote characters.",
     "copyable": true
   }
-})
-
+});
