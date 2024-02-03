@@ -1,3 +1,3 @@
-import { compat, } from "../deps.ts";
+import { compat, types as T } from "../deps.ts";
 
-export const setConfig = compat.setConfig;
+export const setConfig: T.ExpectedExports.setConfig = compat.setConfig;

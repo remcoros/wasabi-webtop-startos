@@ -1,20 +1,19 @@
-
-id: webtop 
-title: "Webtop"
-version: 3.18.33
-release-notes: "Webtop for StartOS"
+id: webtop-sparrow
+title: "Sparrow"
+version: 1.18.2.1
+release-notes: "Sparrow on Webtop for StartOS"
 license: GPLv3
-wrapper-repo: "https://github.com/k0gen/webtop-startos"
-upstream-repo: "https://github.com/linuxserver/docker-webtop"
-support-site: "https://github.com/linuxserver/docker-webtop/issues"
-marketing-site: "https://github.com/linuxserver/docker-webtop"
-donation-url: "https://www.linuxserver.io/donate/"
+wrapper-repo: "https://github.com/remcoros/webtop-sparrow-startos"
+upstream-repo: "https://github.com/sparrowwallet/sparrow"
+support-site: "https://github.com/sparrowwallet/sparrow/issues"
+marketing-site: "https://sparrowwallet.com/"
+donation-url: "https://sparrowwallet.com/donate/"
 build: ["make"]
 description:
-  short: Webtop - A Linux Desktop Environment In Your Browser
+  short: Sparrow - Desktop Wallet In Your Browser
   long: |
-    Webtop is an innovative Linux desktop environment that allows users to access a complete Linux desktop directly from their web browser.
-    With Webtop, you no longer need to install or configure any software on your local machine to use Linux.
+    Sparrow on Webtop is a stripped down version of 'Webtop' (a Linux Desktop Environment) running the Sparrow wallet. 
+    This allows users to access a simple Linux desktop with Sparrow pre-installed directly from their web browser.
 assets:
   license: LICENSE
   icon: icon.png
@@ -34,7 +33,7 @@ hardware-requirements:
     - aarch64
 health-checks:
   web-ui:
-    name: Webtop Interface
+    name: Sparrow User Interface
     success-message: Ready to be visited in a web browser
     type: script
 config:
@@ -52,7 +51,7 @@ volumes:
 interfaces:
   main:
     name: User Interface
-    description: Web user interface to display your Webtop Desktop
+    description: Web user interface to display your Sparrow on Webtop Desktop
     tor-config:
       port-mapping:
         80: "3000"
@@ -64,7 +63,17 @@ interfaces:
     protocols:
       - tcp
       - http
-dependencies: {}
+dependencies:
+  bitcoind:
+    version: ">=0.21.1.2 <28.0.0"
+    requirement:
+      type: "required"
+    description: Used to connect Sparrow to a private Bitcoin Core server
+  electrs:
+    version: ">=0.9.6 <0.12.0"
+    requirement:
+      type: "required"
+    description: Used to connect Sparrow to a private electrum server
 backup:
   create:
     type: docker

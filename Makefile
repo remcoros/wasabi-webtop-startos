@@ -1,6 +1,10 @@
+SPARROW_VERSION := 1.8.2
+SPARROW_DEBVERSION := 1.8.2-1
+
 PKG_ID := $(shell yq e ".id" manifest.yaml)
 PKG_VERSION := $(shell yq e ".version" manifest.yaml)
 TS_FILES := $(shell find ./ -name \*.ts)
+ROOT_FILES := $(shell find ./root)
 
 .DELETE_ON_ERROR:
 
@@ -34,18 +38,26 @@ clean:
 scripts/embassy.js: $(TS_FILES)
 	deno bundle scripts/embassy.ts scripts/embassy.js
 
-docker-images/aarch64.tar: Dockerfile docker_entrypoint.sh
+docker-images/aarch64.tar: Dockerfile.aarch64 docker_entrypoint.sh $(ROOT_FILES)
 ifeq ($(ARCH),x86_64)
 else
 	mkdir -p docker-images
-	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --build-arg ARCH=aarch64 --platform=linux/arm64 -o type=docker,dest=docker-images/aarch64.tar .
+	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) \
+		--build-arg ARCH=aarch64 \
+		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
+		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
+		--platform=linux/arm64 -o type=docker,dest=docker-images/aarch64.tar -f Dockerfile.aarch64 .
 endif
 
-docker-images/x86_64.tar: Dockerfile docker_entrypoint.sh
+docker-images/x86_64.tar: Dockerfile docker_entrypoint.sh $(ROOT_FILES)
 ifeq ($(ARCH),aarch64)
 else
 	mkdir -p docker-images
-	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --build-arg ARCH=x86_64 --platform=linux/amd64 -o type=docker,dest=docker-images/x86_64.tar .
+	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) \
+		--build-arg ARCH=x86_64 \
+		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
+		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
+		--platform=linux/amd64 -o type=docker,dest=docker-images/x86_64.tar .
 endif
 
 $(PKG_ID).s9pk: manifest.yaml instructions.md icon.png LICENSE scripts/embassy.js docker-images/aarch64.tar docker-images/x86_64.tar
