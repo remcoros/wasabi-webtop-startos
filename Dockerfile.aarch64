@@ -6,6 +6,8 @@ ARG PLATFORM
 ARG SPARROW_VERSION
 ARG SPARROW_DEBVERSION
 ARG SPARROW_PGP_SIG
+ARG YQ_VERSION
+ARG YQ_SHA
 
 RUN \
   echo "**** install packages ****" && \
@@ -21,7 +23,9 @@ RUN \
     wget \
     socat \
     gnupg && \
-  wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_${PLATFORM} && chmod +x /usr/local/bin/yq && \
+  wget -qO /tmp/yq https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_${PLATFORM} && \
+  echo "${YQ_SHA} /tmp/yq" | sha256sum --check || exit 1 && \ 
+  mv /tmp/yq /usr/local/bin/yq && chmod +x /usr/local/bin/yq && \
   echo "**** xfce tweaks ****" && \
   rm -f /etc/xdg/autostart/xscreensaver.desktop && \
   sed -i 's|</applications>|  <application title="Sparrow" type="normal">\n    <maximized>yes</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
