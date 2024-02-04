@@ -1,11 +1,6 @@
 #!/bin/bash
 
 # default file copies first run
-if [ ! -f $HOME/.sparrow/config ]; then
-    mkdir -p $HOME/.sparrow
-    cp /defaults/.sparrow/config $HOME/.sparrow/config
-fi
-
 if [ ! -f $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml ]; then
     mkdir -p $HOME/.config/xfce4/xfconf/xfce-perchannel-xml
     cp /defaults/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
@@ -13,5 +8,10 @@ fi
 
 # open files and directories with thunar (file manager)
 xdg-mime default thunar.desktop inode/directory
+
+# setup a proxy on localhost, Sparrow will not use Tor for local addresses
+# this means we can connect straight to bitcoind/electrs and use Tor for everything else (whirlpool)
+/usr/bin/socat tcp-l:8332,fork,reuseaddr,bind=127.0.0.1 tcp:bitcoind.embassy:8332 &
+/usr/bin/socat tcp-l:50001,fork,reuseaddr,bind=127.0.0.1 tcp:electrs.embassy:50001 &
 
 /opt/sparrow/bin/Sparrow &

@@ -26,14 +26,17 @@
   "enumerateHwPeriod": 30,
   "useZbar": true,
   "serverType": "ELECTRUM_SERVER",
-  "coreServer": "http://bitcoind.embassy:8332",
+  "publicElectrumServer": "ssl://blockstream.info:700|blockstream.info",
+  "coreServer": "http://127.0.0.1:8332",
   "coreAuthType": "USERPASS",
+  "coreAuth": "user:password",
   "useLegacyCoreWallet": false,
-  "electrumServer": "tcp://electrs.embassy:50001",
+  "electrumServer": "tcp://127.0.0.1:50001",
   "recentElectrumServers": [
-    "tcp://electrs.embassy:50001"
+    "tcp://127.0.0.1:50001"
   ],
-  "useProxy": false,
+  "useProxy": true,
+  "proxyServer": "EMBASSY_IP:9050",
   "autoSwitchProxy": true,
   "maxServerTimeout": 34,
   "maxPageSize": 100,
