@@ -45,6 +45,7 @@ else
 	mkdir -p docker-images
 	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) \
 		--build-arg ARCH=aarch64 \
+		--build-arg PLATFORM=arm64 \
 		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
 		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
 		--build-arg SPARROW_PGP_SIG=$(SPARROW_PGP_SIG) \
@@ -57,6 +58,7 @@ else
 	mkdir -p docker-images
 	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) \
 		--build-arg ARCH=x86_64 \
+		--build-arg PLATFORM=amd64 \
 		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
 		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
 		--build-arg SPARROW_PGP_SIG=$(SPARROW_PGP_SIG) \

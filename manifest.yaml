@@ -1,6 +1,6 @@
 id: webtop-sparrow
 title: "Sparrow"
-version: 1.18.2.1
+version: 1.8.2.1
 release-notes: "Sparrow on Webtop for StartOS"
 license: GPLv3
 wrapper-repo: "https://github.com/remcoros/webtop-sparrow-startos"
