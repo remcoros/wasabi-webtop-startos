@@ -2,10 +2,10 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm
 
 # these are specified in Makefile
 ARG ARCH
+ARG PLATFORM
 ARG SPARROW_VERSION
 ARG SPARROW_DEBVERSION
-
-ARG SPARROW_PGP_SIG=E94618334C674B40
+ARG SPARROW_PGP_SIG
 
 RUN \
   echo "**** install packages ****" && \
@@ -18,9 +18,10 @@ RUN \
     tumbler \
     thunar \
     python3-xdg \
-    yq \
     wget \
+    socat \
     gnupg && \
+  wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.40.5/yq_linux_${PLATFORM} && chmod +x /usr/local/bin/yq && \
   echo "**** xfce tweaks ****" && \
   rm -f /etc/xdg/autostart/xscreensaver.desktop && \
   sed -i 's|</applications>|  <application title="Sparrow" type="normal">\n    <maximized>yes</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
@@ -37,25 +38,20 @@ RUN \
 # Sparrow
 RUN \
   echo "**** install Sparrow ****" && \
-  case ${ARCH:-x86_64} in \
-    "aarch64") SPARROW_ARCH="arm64";; \
-    "x86_64") SPARROW_ARCH="amd64";; \
-    *) echo "Dockerfile does not support this platform"; exit 1 ;; \
-    esac && \
-    # sparrow requires this directory to exist
-    mkdir -p /usr/share/desktop-directories/ && \
-    # Download and install Sparrow (todo: gpg sig verification)
-    wget --quiet https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow_${SPARROW_DEBVERSION}_${SPARROW_ARCH}.deb \
-                 https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt \
-                 https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt.asc \
-                 https://keybase.io/craigraw/pgp_keys.asc && \
-    # verify pgp and sha signatures
-    gpg --import pgp_keys.asc && \
-    gpg --status-fd 1 --verify sparrow-${SPARROW_VERSION}-manifest.txt.asc | grep -q "GOODSIG ${PGP_SIG}" || exit 1 && \
-    sha256sum --check sparrow-${SPARROW_VERSION}-manifest.txt --ignore-missing || exit 1 && \
-    apt-get install -y ./sparrow_${SPARROW_DEBVERSION}_${SPARROW_ARCH}.deb && \
-    # cleanup
-    rm ./sparrow* ./pgp_keys.asc
+  # sparrow requires this directory to exist
+  mkdir -p /usr/share/desktop-directories/ && \
+  # Download and install Sparrow (todo: gpg sig verification)
+  wget --quiet https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow_${SPARROW_DEBVERSION}_${PLATFORM}.deb \
+                https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt \
+                https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt.asc \
+                https://keybase.io/craigraw/pgp_keys.asc && \
+  # verify pgp and sha signatures
+  gpg --import pgp_keys.asc && \
+  gpg --status-fd 1 --verify sparrow-${SPARROW_VERSION}-manifest.txt.asc | grep -q "GOODSIG ${PGP_SIG}" || exit 1 && \
+  sha256sum --check sparrow-${SPARROW_VERSION}-manifest.txt --ignore-missing || exit 1 && \
+  apt-get install -y ./sparrow_${SPARROW_DEBVERSION}_${PLATFORM}.deb && \
+  # cleanup
+  rm ./sparrow* ./pgp_keys.asc
 
 # add local files
 COPY /root /

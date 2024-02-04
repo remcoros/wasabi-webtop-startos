@@ -1,5 +1,6 @@
 SPARROW_VERSION := 1.8.2
 SPARROW_DEBVERSION := 1.8.2-1
+SPARROW_PGP_SIG := E94618334C674B40
 
 PKG_ID := $(shell yq e ".id" manifest.yaml)
 PKG_VERSION := $(shell yq e ".version" manifest.yaml)
@@ -44,8 +45,10 @@ else
 	mkdir -p docker-images
 	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) \
 		--build-arg ARCH=aarch64 \
+		--build-arg PLATFORM=arm64 \
 		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
 		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
+		--build-arg SPARROW_PGP_SIG=$(SPARROW_PGP_SIG) \
 		--platform=linux/arm64 -o type=docker,dest=docker-images/aarch64.tar -f Dockerfile.aarch64 .
 endif
 
@@ -55,8 +58,10 @@ else
 	mkdir -p docker-images
 	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) \
 		--build-arg ARCH=x86_64 \
+		--build-arg PLATFORM=amd64 \
 		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
 		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
+		--build-arg SPARROW_PGP_SIG=$(SPARROW_PGP_SIG) \
 		--platform=linux/amd64 -o type=docker,dest=docker-images/x86_64.tar .
 endif
 
