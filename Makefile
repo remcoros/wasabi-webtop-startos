@@ -1,6 +1,10 @@
 SPARROW_VERSION := 1.8.2
 SPARROW_DEBVERSION := 1.8.2-1
 SPARROW_PGP_SIG := E94618334C674B40
+# sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.5/checksums-bsd
+YQ_VERSION := 4.40.5
+YQ_SHA_AMD64 := 0d6aaf1cf44a8d18fbc7ed0ef14f735a8df8d2e314c4cc0f0242d35c0a440c95
+YQ_SHA_ARM64 := 9431f0fa39a0af03a152d7fe19a86e42e9ff28d503ed4a70598f9261ec944a97
 
 PKG_ID := $(shell yq e ".id" manifest.yaml)
 PKG_VERSION := $(shell yq e ".version" manifest.yaml)
@@ -49,6 +53,8 @@ else
 		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
 		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
 		--build-arg SPARROW_PGP_SIG=$(SPARROW_PGP_SIG) \
+		--build-arg YQ_VERSION=$(YQ_VERSION) \
+		--build-arg YQ_SHA=$(YQ_SHA_ARM64) \
 		--platform=linux/arm64 -o type=docker,dest=docker-images/aarch64.tar -f Dockerfile.aarch64 .
 endif
 
@@ -62,6 +68,8 @@ else
 		--build-arg SPARROW_VERSION=$(SPARROW_VERSION) \
 		--build-arg SPARROW_DEBVERSION=$(SPARROW_DEBVERSION) \
 		--build-arg SPARROW_PGP_SIG=$(SPARROW_PGP_SIG) \
+		--build-arg YQ_VERSION=$(YQ_VERSION) \
+		--build-arg YQ_SHA=$(YQ_SHA_AMD64) \
 		--platform=linux/amd64 -o type=docker,dest=docker-images/x86_64.tar .
 endif
 
