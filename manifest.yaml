@@ -48,6 +48,8 @@ volumes:
     type: data
   userdir:
     type: data
+  compat:
+    type: assets
 interfaces:
   main:
     name: User Interface
@@ -81,30 +83,28 @@ backup:
     type: docker
     image: compat
     system: true
-    entrypoint: compat
+    entrypoint: /mnt/assets/backup.sh
     args:
-      - duplicity
       - create
-      - /mnt/backup
       - /root/data
       - /config
     mounts:
       BACKUP: /mnt/backup
+      compat: /mnt/assets
       main: /root/data
       userdir: /config
   restore:
     type: docker
     image: compat
     system: true
-    entrypoint: compat
+    entrypoint: /mnt/assets/backup.sh
     args:
-      - duplicity
       - restore
-      - /mnt/backup
       - /root/data
       - /config
     mounts:
       BACKUP: /mnt/backup
+      compat: /mnt/assets
       main: /root/data
       userdir: /config
 migrations:
