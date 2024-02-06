@@ -1,11 +1,8 @@
 id: webtop-sparrow
 title: "Sparrow"
-version: 1.8.2.2
+version: 1.8.2.3
 release-notes: |
-  Sparrow on Webtop for StartOS
-  - Setting to choose server (Bitcoin Core/Electrs/Public/Custom)
-  - Setting to choose proxy (Tor/None/Custom)
-  - Fixed backup/restore
+  Sparrow 1.8.2 on Webtop for StartOS
 license: GPLv3
 wrapper-repo: "https://github.com/remcoros/webtop-sparrow-startos"
 upstream-repo: "https://github.com/sparrowwallet/sparrow"
