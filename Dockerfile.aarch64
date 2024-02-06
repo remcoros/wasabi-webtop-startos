@@ -51,7 +51,7 @@ RUN \
                 https://keybase.io/craigraw/pgp_keys.asc && \
   # verify pgp and sha signatures
   gpg --import pgp_keys.asc && \
-  gpg --status-fd 1 --verify sparrow-${SPARROW_VERSION}-manifest.txt.asc | grep -q "GOODSIG ${PGP_SIG}" || exit 1 && \
+  gpg --status-fd 1 --verify sparrow-${SPARROW_VERSION}-manifest.txt.asc | grep -q "GOODSIG ${SPARROW_PGP_SIG} Craig Raw <craig@sparrowwallet.com>" || exit 1 && \
   sha256sum --check sparrow-${SPARROW_VERSION}-manifest.txt --ignore-missing || exit 1 && \
   apt-get install -y ./sparrow_${SPARROW_DEBVERSION}_${PLATFORM}.deb && \
   # cleanup
