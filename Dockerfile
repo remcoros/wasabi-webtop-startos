@@ -24,6 +24,8 @@ RUN \
     librsvg2-common \
     notification-daemon \
     python3-xdg \
+    # dark theme
+    gnome-themes-extra \
     # other
     wget \
     socat \
@@ -54,7 +56,6 @@ RUN \
   mv /tmp/yq /usr/local/bin/yq && chmod +x /usr/local/bin/yq && \
   echo "**** xfce tweaks ****" && \
   rm -f /etc/xdg/autostart/xscreensaver.desktop && \
-  sed -i 's|</applications>|  <application title="Sparrow" type="normal">\n    <maximized>yes</maximized>\n  </application>\n</applications>|' /etc/xdg/openbox/rc.xml && \
   # StartOS branding
   echo "Starting Sparrow on Webtop for StartOS..." > /etc/s6-overlay/s6-rc.d/init-adduser/branding; sed -i '/run_branding() {/,/}/d' /docker-mods && \
   # cleanup and remove some unneeded large binaries
@@ -112,7 +113,10 @@ ENV \
   # base container starts docker by default, but we removed it, so set to false
   START_DOCKER=false \
   PULSE_RUNTIME_PATH=/defaults \
-  NVIDIA_DRIVER_CAPABILITIES=all
+  NVIDIA_DRIVER_CAPABILITIES=all \
+  # set dark theme
+  GTK_THEME=Adwaita:dark \
+  GTK2_RC_FILES=/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc 
 
 # add local files
 COPY /root /
