@@ -1,6 +1,6 @@
 id: webtop-sparrow
 title: "Sparrow"
-version: 1.8.2.5
+version: 1.8.2.1
 release-notes: |
   Sparrow 1.8.2 on Webtop for StartOS
 license: GPLv3
@@ -27,7 +27,7 @@ main:
   mounts:
     main: /root/data
     userdir: /config
-  gpu-acceleration: false
+  gpu-acceleration: true
 hardware-requirements:
   arch:
     - x86_64

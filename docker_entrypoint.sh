@@ -28,54 +28,71 @@ data:
     masked: true
 EOF
 
+# Copy default files
+if [ ! -f /config/.config/openbox/rc.xml ]; then
+    mkdir -p /config/.config/openbox
+    cp /defaults/rc.xml /config/.config/openbox/rc.xml
+    chown -R $PUID:$PGID /config/.config/openbox
+fi
+
 if [ ! -f /config/.sparrow/config ]; then
   echo "No Sparrow config file found, creating default"
   mkdir -p /config/.sparrow
   cp /defaults/.sparrow/config /config/.sparrow/config
-  chown -R 1000:1000 /config/.sparrow
+  chown -R $PUID:$PGID /config/.sparrow
 fi
 
-case "$(yq e '.server.type' /root/data/start9/config.yaml)" in
-"bitcoind")
-  echo "Configuring Sparrow for Bitcoin Core"
-  export BITCOIND_USER=$(yq e '.server.user' /root/data/start9/config.yaml)
-  export BITCOIND_PASS=$(yq e '.server.password' /root/data/start9/config.yaml)
-  yq e -i '
-    .serverType = "BITCOIN_CORE" |
-    .coreServer = "http://127.0.0.1:8332" |
-    .coreAuthType = "USERPASS" |
-    .coreAuth = strenv(BITCOIND_USER) + ":" + strenv(BITCOIND_PASS)' -o=json /config/.sparrow/config
-  ;;
-"electrs")
-  echo "Configuring Sparrow for Electrs"
-  yq e -i '
-    .serverType = "ELECTRUM_SERVER" |
-    .coreServer = "tcp://127.0.0.1:50001"' -o=json /config/.sparrow/config
-  ;;
-"public")
-  echo "Configuring Sparrow for Public electrum server"
-  yq e -i '.serverType = "PUBLIC_ELECTRUM_SERVER"' -o=json /config/.sparrow/config
-  ;;
-*)
-  echo "Custom server selected, not configuring Sparrow"
-  ;;
-esac
+# Manage Sparrow settings?
+if [ $(yq e '.sparrow.managesettings' /root/data/start9/config.yaml) = "true" ]; then
+  # private bitcoin/electrum server
+  case "$(yq e '.sparrow.server.type' /root/data/start9/config.yaml)" in
+  "bitcoind")
+    echo "Configuring Sparrow for Bitcoin Core"
+    export BITCOIND_USER=$(yq e '.sparrow.server.user' /root/data/start9/config.yaml)
+    export BITCOIND_PASS=$(yq e '.sparrow.server.password' /root/data/start9/config.yaml)
+    yq e -i '
+      .serverType = "BITCOIN_CORE" |
+      .coreServer = "http://127.0.0.1:8332" |
+      .coreAuthType = "USERPASS" |
+      .coreAuth = strenv(BITCOIND_USER) + ":" + strenv(BITCOIND_PASS)' -o=json /config/.sparrow/config
+    ;;
+  "electrs")
+    echo "Configuring Sparrow for Electrs"
+    yq e -i '
+      .serverType = "ELECTRUM_SERVER" |
+      .coreServer = "tcp://127.0.0.1:50001"' -o=json /config/.sparrow/config
+    ;;
+  "public")
+    echo "Configuring Sparrow for Public electrum server"
+    yq e -i '.serverType = "PUBLIC_ELECTRUM_SERVER"' -o=json /config/.sparrow/config
+    ;;
+  *)
+    echo "Unknown server selected, not configuring Sparrow"
+    ;;
+  esac
 
-case "$(yq e '.proxy.type' /root/data/start9/config.yaml)" in
-"tor")
-  echo "Configuring Sparrow for Tor"
-  export EMBASSY_IP=$(ip -4 route list match 0/0 | awk '{print $3}')
-  yq e -i '
-    .useProxy = true |
-    .proxyServer = strenv(EMBASSY_IP) + ":9050"' -o=json /config/.sparrow/config
-  ;;
-"none")
-  echo "Configuring Sparrow for 'no proxy'"
-  yq e -i '.useProxy = false' -o=json /config/.sparrow/config
-  ;;
-*)
-  echo "Custom proxy selected, not configuring Sparrow"
-  ;;
-esac
+  # proxy
+  case "$(yq e '.sparrow.proxy.type' /root/data/start9/config.yaml)" in
+  "tor")
+    echo "Configuring Sparrow for Tor"
+    export EMBASSY_IP=$(ip -4 route list match 0/0 | awk '{print $3}')
+    yq e -i '
+      .useProxy = true |
+      .proxyServer = strenv(EMBASSY_IP) + ":9050"' -o=json /config/.sparrow/config
+    ;;
+  "none")
+    echo "Configuring Sparrow for 'no proxy'"
+    yq e -i '.useProxy = false' -o=json /config/.sparrow/config
+    ;;
+  *)
+    echo "Unknown proxy selected, not configuring Sparrow"
+    ;;
+  esac
+fi
+
+# setup a proxy on localhost, Sparrow will not use Tor for local addresses
+# this means we can connect straight to bitcoind/electrs and use Tor for everything else (whirlpool)
+/usr/bin/socat tcp-l:8332,fork,reuseaddr,su=nobody,bind=127.0.0.1 tcp:bitcoind.embassy:8332 &
+/usr/bin/socat tcp-l:50001,fork,reuseaddr,su=nobody,bind=127.0.0.1 tcp:electrs.embassy:50001 &
 
 exec /init
