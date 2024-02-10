@@ -29,10 +29,10 @@ data:
 EOF
 
 # Copy default files
-if [ ! -f /config/.config/openbox/rc.xml ]; then
-    mkdir -p /config/.config/openbox
-    cp /defaults/rc.xml /config/.config/openbox/rc.xml
-    chown -R $PUID:$PGID /config/.config/openbox
+if [ ! -f /config/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml ]; then
+    mkdir -p /config/.config/xfce4/xfconf/xfce-perchannel-xml
+    cp /defaults/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml /config/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml
+    chown -R $PUID:$PGID /config/.config/xfce4
 fi
 
 if [ ! -f /config/.sparrow/config ]; then
