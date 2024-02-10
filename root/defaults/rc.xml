@@ -694,7 +694,9 @@
     <applications>
 
         <application name="Sparrow"
-            class="Sparrow">
+            class="Sparrow"
+            title="Sparrow"
+            type="normal">
             <maximized>yes</maximized>
         </application>
 

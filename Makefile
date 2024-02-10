@@ -1,10 +1,10 @@
 SPARROW_VERSION := 1.8.2
 SPARROW_DEBVERSION := 1.8.2-1
 SPARROW_PGP_SIG := E94618334C674B40
-# sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.5/checksums-bsd
-YQ_VERSION := 4.40.5
-YQ_SHA_AMD64 := 0d6aaf1cf44a8d18fbc7ed0ef14f735a8df8d2e314c4cc0f0242d35c0a440c95
-YQ_SHA_ARM64 := 9431f0fa39a0af03a152d7fe19a86e42e9ff28d503ed4a70598f9261ec944a97
+# sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.7/checksums-bsd
+YQ_VERSION := 4.40.7
+YQ_SHA_AMD64 := 4f13ee9303a49f7e8f61e7d9c87402e07cc920ae8dfaaa8c10d7ea1b8f9f48ed
+YQ_SHA_ARM64 := a84f2c8f105b70cd348c3bf14048aeb1665c2e7314cbe9aaff15479f268b8412
 
 PKG_ID := $(shell yq e ".id" manifest.yaml)
 PKG_VERSION := $(shell yq e ".version" manifest.yaml)
