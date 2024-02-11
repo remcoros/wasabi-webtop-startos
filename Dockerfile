@@ -22,10 +22,15 @@ RUN \
     # from 'recommended packages', solves a few warnings
     thunar-archive-plugin \
     librsvg2-common \
-    notification-daemon \
     python3-xdg \
     # dark theme
+    hsetroot \
     gnome-themes-extra \
+    # desktop notifications
+    xfce4-notifyd \
+    libnotify-bin \
+    notification-daemon \
+    xclip \
     # other
     wget \
     socat \
@@ -42,6 +47,14 @@ RUN \
     docker-compose-plugin \
     fonts-noto-color-emoji \
     fonts-noto-core \
+    intel-media-va-driver \
+    mesa-va-drivers \
+    xserver-xorg-video-amdgpu \
+    xserver-xorg-video-ati \
+    xserver-xorg-video-intel \
+    xserver-xorg-video-nouveau \
+    xserver-xorg-video-qxl \
+    xserver-xorg-video-radeon \
     perl \
     locales-all && \
   # remove left-over locales and generate default
@@ -75,9 +88,9 @@ RUN \
   mkdir -p /usr/share/desktop-directories/ && \
   # Download and install Sparrow (todo: gpg sig verification)
   wget --quiet https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow_${SPARROW_DEBVERSION}_${PLATFORM}.deb \
-                https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt \
-                https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt.asc \
-                https://keybase.io/craigraw/pgp_keys.asc && \
+               https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt \
+               https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt.asc \
+               https://keybase.io/craigraw/pgp_keys.asc && \
   # verify pgp and sha signatures
   gpg --import pgp_keys.asc && \
   gpg --status-fd 1 --verify sparrow-${SPARROW_VERSION}-manifest.txt.asc | grep -q "GOODSIG ${SPARROW_PGP_SIG} Craig Raw <craig@sparrowwallet.com>" || exit 1 && \
@@ -116,7 +129,9 @@ ENV \
   NVIDIA_DRIVER_CAPABILITIES=all \
   # set dark theme
   GTK_THEME=Adwaita:dark \
-  GTK2_RC_FILES=/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc 
+  GTK2_RC_FILES=/usr/share/themes/Adwaita-dark/gtk-2.0/gtkrc \
+  # prevent kasm from touching our rc.xml
+  NO_FULL=1
 
 # add local files
 COPY /root /
@@ -127,5 +142,3 @@ COPY --chmod=664 icon.png /kclient/public/favicon.ico
 # ports and volumes
 EXPOSE 3000
 VOLUME /config
-
-ENTRYPOINT ["/init"]
