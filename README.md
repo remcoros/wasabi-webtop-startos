@@ -22,8 +22,8 @@ Install the system dependencies below to build this project by following the ins
 Clone the Webtop package repository locally.
 
 ```
-git clone git@github.com:remcoros/webtop-sparrow-startos.git
-cd webtop-sparrow-startos
+git clone git@github.com:remcoros/sparrow-webtop-startos.git
+cd sparrow-webtop-startos
 ```
 
 ## Building
@@ -58,7 +58,7 @@ start-cli auth login
 make install
 ```
 
-**Tip:** You can also install the webtop-sparrow.s9pk by sideloading it under the **StartOS > System > Sideload a Service** section.
+**Tip:** You can also install the sparrow-webtop.s9pk by sideloading it under the **StartOS > System > Sideload a Service** section.
 
 ## Verify Install
 
