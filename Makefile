@@ -1,5 +1,5 @@
-SPARROW_VERSION := 1.8.2
-SPARROW_DEBVERSION := 1.8.2-1
+SPARROW_VERSION := 1.8.3
+SPARROW_DEBVERSION := 1.8.3-1
 SPARROW_PGP_SIG := E94618334C674B40
 # sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.7/checksums-bsd
 YQ_VERSION := 4.40.7
@@ -44,7 +44,7 @@ clean:
 scripts/embassy.js: $(TS_FILES)
 	deno bundle scripts/embassy.ts scripts/embassy.js
 
-docker-images/aarch64.tar: Dockerfile.aarch64 docker_entrypoint.sh $(ROOT_FILES)
+docker-images/aarch64.tar: manifest.yaml Dockerfile.aarch64 docker_entrypoint.sh $(ROOT_FILES)
 ifeq ($(ARCH),x86_64)
 else
 	mkdir -p docker-images
@@ -59,7 +59,7 @@ else
 		--platform=linux/arm64 -o type=docker,dest=docker-images/aarch64.tar -f Dockerfile.aarch64 .
 endif
 
-docker-images/x86_64.tar: Dockerfile docker_entrypoint.sh $(ROOT_FILES)
+docker-images/x86_64.tar: manifest.yaml Dockerfile docker_entrypoint.sh $(ROOT_FILES)
 ifeq ($(ARCH),aarch64)
 else
 	mkdir -p docker-images

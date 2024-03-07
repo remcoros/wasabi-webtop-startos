@@ -1,8 +1,8 @@
 id: sparrow-webtop
 title: "Sparrow"
-version: 1.8.2.1
+version: 1.8.3.1
 release-notes: |
-  Sparrow 1.8.2 on Webtop for StartOS
+  * Update to Sparrow 1.8.3 - See [full changelog](https://github.com/sparrowwallet/sparrow/releases/tag/1.8.3)
 license: GPLv3
 wrapper-repo: "https://github.com/remcoros/sparrow-webtop-startos"
 upstream-repo: "https://github.com/sparrowwallet/sparrow"
