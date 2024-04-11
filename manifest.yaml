@@ -1,8 +1,9 @@
 id: sparrow-webtop
 title: "Sparrow"
-version: 1.8.4.1
+version: 1.8.5.1
 release-notes: |
-  * Update to Sparrow 1.8.4 - See [full changelog](https://github.com/sparrowwallet/sparrow/releases/tag/1.8.4)
+  * Update to Sparrow 1.8.5 - See [full changelog](https://github.com/sparrowwallet/sparrow/releases/tag/1.8.5)
+  * Update and pin docker base image to specific debian version
 license: GPLv3
 wrapper-repo: "https://github.com/remcoros/sparrow-webtop-startos"
 upstream-repo: "https://github.com/sparrowwallet/sparrow"
