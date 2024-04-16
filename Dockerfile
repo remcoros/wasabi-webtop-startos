@@ -1,11 +1,10 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-d42b46dd-ls51 AS buildstage
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-d274027d-ls53 AS buildstage
 
 # these are specified in Makefile
 ARG ARCH
 ARG PLATFORM
-ARG SPARROW_VERSION
-ARG SPARROW_DEBVERSION
-ARG SPARROW_PGP_SIG
+ARG WASABI_VERSION
+ARG WASABI_PGP_SIG
 ARG YQ_VERSION
 ARG YQ_SHA
 
@@ -32,8 +31,8 @@ RUN \
     notification-daemon \
     xclip \
     # other
+    policykit-1 \
     wget \
-    socat \
     gnupg && \
   # remove unused packages from base image
   DEBIAN_FRONTEND=noninteractive \
@@ -70,7 +69,7 @@ RUN \
   echo "**** xfce tweaks ****" && \
   rm -f /etc/xdg/autostart/xscreensaver.desktop && \
   # StartOS branding
-  echo "Starting Sparrow on Webtop for StartOS..." > /etc/s6-overlay/s6-rc.d/init-adduser/branding; sed -i '/run_branding() {/,/}/d' /docker-mods && \
+  echo "Starting Wasabi on Webtop for StartOS..." > /etc/s6-overlay/s6-rc.d/init-adduser/branding; sed -i '/run_branding() {/,/}/d' /docker-mods && \
   # cleanup and remove some unneeded large binaries
   echo "**** cleanup ****" && \
   rm /kasmbins/kasm_webcam_server && \
@@ -81,24 +80,24 @@ RUN \
     /var/tmp/* \
     /tmp/*
 
-# Sparrow
+# Wasabi
 RUN \
-  echo "**** install Sparrow ****" && \
-  # sparrow requires this directory to exist
+  echo "**** install Wasabi ****" && \
+  # Wasabi requires this directory to exist
   mkdir -p /usr/share/desktop-directories/ && \
-  # Download and install Sparrow (todo: gpg sig verification)
-  wget --quiet https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow_${SPARROW_DEBVERSION}_${PLATFORM}.deb \
-               https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt \
-               https://github.com/sparrowwallet/sparrow/releases/download/${SPARROW_VERSION}/sparrow-${SPARROW_VERSION}-manifest.txt.asc \
-               https://keybase.io/craigraw/pgp_keys.asc && \
+  # Download and install Wasabi
+  wget --quiet https://github.com/zkSNACKs/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb \
+               https://github.com/zkSNACKs/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb.asc \
+               https://github.com/zkSNACKs/WalletWasabi/releases/download/v${WASABI_VERSION}/SHA256SUMS.asc \
+               https://raw.githubusercontent.com/zkSNACKs/WalletWasabi/master/PGP.txt && \
   # verify pgp and sha signatures
-  gpg --import pgp_keys.asc && \
-  gpg --status-fd 1 --verify sparrow-${SPARROW_VERSION}-manifest.txt.asc | grep -q "GOODSIG ${SPARROW_PGP_SIG} Craig Raw <craig@sparrowwallet.com>" || exit 1 && \
-  sha256sum --check sparrow-${SPARROW_VERSION}-manifest.txt --ignore-missing || exit 1 && \
+  gpg --import PGP.txt && \
+  gpg --status-fd 1 --verify Wasabi-${WASABI_VERSION}.deb.asc | grep -q "GOODSIG ${WASABI_PGP_SIG} zkSNACKs <zksnacks@gmail.com>" || exit 1 && \
+  sha256sum --check SHA256SUMS.asc --ignore-missing || exit 1 && \
   DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y ./sparrow_${SPARROW_DEBVERSION}_${PLATFORM}.deb && \
+  apt-get install -y ./Wasabi-${WASABI_VERSION}.deb && \
   # cleanup
-  rm ./sparrow* ./pgp_keys.asc
+  rm ./Wasabi* ./PGP.txt ./SHA256SUMS.asc
 
 # start from scratch so we create smaller layers in the resulting image
 FROM scratch

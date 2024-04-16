@@ -2,9 +2,9 @@
   <img src="icon.png" alt="Project Logo" width="21%">
 </p>
 
-# Sparrow on Webtop for StartOS
+# Wasabi on Webtop for StartOS
 
-[Webtop](https://docs.linuxserver.io/images/docker-webtop/) is an innovative Linux desktop environment that allows users to access a complete Linux desktop directly from their web browser. This repository creates the `s9pk` package that is installed to run the [Sparrow desktop wallet](https://sparrowwallet.com/) on a stripped down version of `Webtop` on [StartOS](https://github.com/Start9Labs/start-os/). Learn more about service packaging in the [Developer Docs](https://start9.com/latest/developer-docs/).
+[Webtop](https://docs.linuxserver.io/images/docker-webtop/) is an innovative Linux desktop environment that allows users to access a complete Linux desktop directly from their web browser. This repository creates the `s9pk` package that is installed to run the [Wasabi desktop wallet](https://wasabiwallet.io/) on a stripped down version of `Webtop` on [StartOS](https://github.com/Start9Labs/start-os/). Learn more about service packaging in the [Developer Docs](https://start9.com/latest/developer-docs/).
 
 ## Dependencies
 
@@ -22,28 +22,16 @@ Install the system dependencies below to build this project by following the ins
 Clone the Webtop package repository locally.
 
 ```
-git clone git@github.com:remcoros/sparrow-webtop-startos.git
-cd sparrow-webtop-startos
+git clone git@github.com:remcoros/wasabi-webtop-startos.git
+cd wasabi-webtop-startos
 ```
 
 ## Building
 
-To build the **Sparrow** service as a universal package, run the following command:
+To build the **Wasabi** service as a universal package, run the following command:
 
 ```
 make
-```
-
-Alternatively the package can be built for individual architectures by specifying the architecture as follows:
-
-```
-make x86
-```
-
-or
-
-```
-make arm
 ```
 
 ## Installing (on StartOS)
@@ -58,10 +46,10 @@ start-cli auth login
 make install
 ```
 
-**Tip:** You can also install the sparrow-webtop.s9pk by sideloading it under the **StartOS > System > Sideload a Service** section.
+**Tip:** You can also install the wasabi-webtop.s9pk by sideloading it under the **StartOS > System > Sideload a Service** section.
 
 ## Verify Install
 
-Go to your StartOS Services page, select **Sparrow**, configure and start the service.
+Go to your StartOS Services page, select **Wasabi**, configure and start the service.
 
 **Done!**

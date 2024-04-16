@@ -1,7 +1,9 @@
 #!/bin/sh
+
 echo
-echo "Initialising Sparrow on Webtop..."
+echo "Initialising Wasabi on Webtop..."
 echo
+
 export PUID=1000
 export PGID=1000
 export TZ=Etc/UTC
@@ -29,64 +31,40 @@ data:
 EOF
 
 # Copy default files
-if [ ! -f /config/.sparrow/config ]; then
-  echo "No Sparrow config file found, creating default"
-  mkdir -p /config/.sparrow
-  cp /defaults/.sparrow/config /config/.sparrow/config
-  chown -R $PUID:$PGID /config/.sparrow
+cp /defaults/.backupignore /config/.backupignore
+
+if [ ! -f /config/.walletwasabi/client/Config.json ]; then
+  echo "No Wasabi config file found, creating default"
+  mkdir -p /config/.walletwasabi/client/
+  cp /defaults/.walletwasabi/client/Config.json /config/.walletwasabi/client/Config.json
+  chown -R $PUID:$PGID /config/.walletwasabi
 fi
 
-# Manage Sparrow settings?
-if [ $(yq e '.sparrow.managesettings' /root/data/start9/config.yaml) = "true" ]; then
-  # private bitcoin/electrum server
-  case "$(yq e '.sparrow.server.type' /root/data/start9/config.yaml)" in
-  "bitcoind")
-    echo "Configuring Sparrow for Bitcoin Core"
-    export BITCOIND_USER=$(yq e '.sparrow.server.user' /root/data/start9/config.yaml)
-    export BITCOIND_PASS=$(yq e '.sparrow.server.password' /root/data/start9/config.yaml)
-    yq e -i '
-      .serverType = "BITCOIN_CORE" |
-      .coreServer = "http://127.0.0.1:8332" |
-      .coreAuthType = "USERPASS" |
-      .coreAuth = strenv(BITCOIND_USER) + ":" + strenv(BITCOIND_PASS)' -o=json /config/.sparrow/config
-    ;;
-  "electrs")
-    echo "Configuring Sparrow for Electrs"
-    yq e -i '
-      .serverType = "ELECTRUM_SERVER" |
-      .coreServer = "tcp://127.0.0.1:50001"' -o=json /config/.sparrow/config
-    ;;
-  "public")
-    echo "Configuring Sparrow for Public electrum server"
-    yq e -i '.serverType = "PUBLIC_ELECTRUM_SERVER"' -o=json /config/.sparrow/config
-    ;;
-  *)
-    echo "Unknown server selected, not configuring Sparrow"
-    ;;
-  esac
+# Manage Wasabi settings?
+if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; then
+  # remove UTF8 BOM character, because yq does not like this
+  sed -i '1s/^\xEF\xBB\xBF//' /config/.walletwasabi/client/Config.json
 
-  # proxy
-  case "$(yq e '.sparrow.proxy.type' /root/data/start9/config.yaml)" in
-  "tor")
-    echo "Configuring Sparrow for Tor"
-    export EMBASSY_IP=$(ip -4 route list match 0/0 | awk '{print $3}')
-    yq e -i '
-      .useProxy = true |
-      .proxyServer = strenv(EMBASSY_IP) + ":9050"' -o=json /config/.sparrow/config
+  # private bitcoin server
+  case "$(yq e '.wasabi.server.type' /root/data/start9/config.yaml)" in
+  "bitcoind")
+    echo "Configuring Wasabi for private Bitcoin Core node"
+    yq e -i '.MainNetBitcoinP2pEndPoint = "bitcoind.embassy:8333"' -o=json /config/.walletwasabi/client/Config.json    
     ;;
   "none")
-    echo "Configuring Sparrow for 'no proxy'"
-    yq e -i '.useProxy = false' -o=json /config/.sparrow/config
+    echo "Configuring Wasabi for public Bitcoin nodes"
+    # reset it to default (127.0.0.1:8333), an empty string is not allowed
+    yq e -i '.MainNetBitcoinP2pEndPoint = "127.0.0.1:8333"' -o=json /config/.walletwasabi/client/Config.json
     ;;
   *)
-    echo "Unknown proxy selected, not configuring Sparrow"
+    echo "Unknown server selected, not configuring Wasabi"
     ;;
   esac
 fi
 
-# setup a proxy on localhost, Sparrow will not use Tor for local addresses
-# this means we can connect straight to bitcoind/electrs and use Tor for everything else (whirlpool)
-/usr/bin/socat tcp-l:8332,fork,reuseaddr,su=nobody,bind=127.0.0.1 tcp:bitcoind.embassy:8332 &
-/usr/bin/socat tcp-l:50001,fork,reuseaddr,su=nobody,bind=127.0.0.1 tcp:electrs.embassy:50001 &
+# hack to disable systemd-inhibit, which Wasabi uses for sleep/shutdown detection
+# we don't need it, since we run in a container and don't use systemd or sleep the system.
+# this gets rid of a lot of repeated warning logs
+mv /usr/bin/systemd-inhibit /usr/bin/systemd-inhibit.disabled
 
 exec /init

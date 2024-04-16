@@ -1,21 +1,20 @@
-id: sparrow-webtop
-title: "Sparrow"
-version: 1.8.5.1
+id: wasabi-webtop
+title: "Wasabi"
+version: 2.0.7.1
 release-notes: |
-  * Update to Sparrow 1.8.5 - See [full changelog](https://github.com/sparrowwallet/sparrow/releases/tag/1.8.5)
-  * Update and pin docker base image to specific debian version
-license: GPLv3
-wrapper-repo: "https://github.com/remcoros/sparrow-webtop-startos"
-upstream-repo: "https://github.com/sparrowwallet/sparrow"
-support-site: "https://github.com/sparrowwallet/sparrow/issues"
-marketing-site: "https://sparrowwallet.com/"
-donation-url: "https://sparrowwallet.com/donate/"
+  * Initial release of Wasabi 2.0.7.1 for StartOS
+license: MIT
+wrapper-repo: "https://github.com/remcoros/wasabi-webtop-startos"
+upstream-repo: "https://github.com/zkSNACKs/WalletWasabi"
+support-site: "https://github.com/zkSNACKs/WalletWasabi/issues"
+marketing-site: "https://wasabiwallet.io/"
+donation-url: "https://wasabiwallet.io/contribution.html"
 build: ["make"]
 description:
-  short: Sparrow - Desktop Wallet In Your Browser
+  short: Wasabi - Desktop Wallet In Your Browser
   long: |
-    Sparrow on Webtop is a stripped down version of 'Webtop' (a Linux Desktop Environment) running the Sparrow wallet. 
-    This allows users to access a simple Linux desktop with Sparrow pre-installed directly from their web browser.
+    Wasabi on Webtop is a stripped down version of 'Webtop' (a Linux Desktop Environment) running the Wasabi wallet. 
+    This allows users to access a simple Linux desktop with Wasabi pre-installed directly from their web browser.
 assets:
   license: LICENSE
   icon: icon.png
@@ -32,10 +31,9 @@ main:
 hardware-requirements:
   arch:
     - x86_64
-    - aarch64
 health-checks:
   web-ui:
-    name: Sparrow User Interface
+    name: Wasabi User Interface
     success-message: Ready to be visited in a web browser
     type: script
 config:
@@ -55,7 +53,7 @@ volumes:
 interfaces:
   main:
     name: User Interface
-    description: Web user interface to display your Sparrow on Webtop Desktop
+    description: Web user interface to display your Wasabi on Webtop Desktop
     tor-config:
       port-mapping:
         80: "3000"
@@ -71,15 +69,9 @@ dependencies:
   bitcoind:
     version: ">=0.21.1.2 <28.0.0"
     requirement:
-      type: "opt-in"
-      how: "Select Bitcoin Core as the server"
-    description: Used to connect Sparrow to a private Bitcoin Core server
-  electrs:
-    version: ">=0.9.6 <0.12.0"
-    requirement:
       type: "opt-out"
-      how: "Select Bitcoin Core or Public (not recommended) as the server"
-    description: Used to connect Sparrow to a private electrum server
+      how: "Select 'None' as the server"
+    description: Used to connect Wasabi to a private Bitcoin Core server
 backup:
   create:
     type: docker

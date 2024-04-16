@@ -121,7 +121,7 @@
         <number>1</number>
         <firstdesk>1</firstdesk>
         <names>
-            <name>Sparrow</name>
+            <name>Wasabi</name>
         </names>
         <popupTime>0</popupTime>
     </desktops>
@@ -694,11 +694,12 @@
     </menu>
     <applications>
 
-        <application name="Sparrow"
-            class="Sparrow"
-            title="Sparrow"
+        <application name="wassabee"
+            class="Wasabi Wallet"
+            title="Wasabi Wallet"
             type="normal">
-            <maximized>yes</maximized>
+            <fullscreen>yes</fullscreen>
+            <!-- <maximized>yes</maximized> -->
         </application>
 
         <!--
