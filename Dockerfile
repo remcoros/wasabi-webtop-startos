@@ -25,6 +25,7 @@ RUN \
     # dark theme
     hsetroot \
     gnome-themes-extra \
+    compton \
     # desktop notifications
     xfce4-notifyd \
     libnotify-bin \

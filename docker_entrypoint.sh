@@ -33,6 +33,11 @@ EOF
 # Copy default files
 cp /defaults/.backupignore /config/.backupignore
 
+# always overwrite autostart in case we change it
+mkdir -p /config/.config/openbox
+cp /defaults/autostart /config/.config/openbox/autostart
+chown -R abc:abc /config/.config/openbox
+
 if [ ! -f /config/.walletwasabi/client/Config.json ]; then
   echo "No Wasabi config file found, creating default"
   mkdir -p /config/.walletwasabi/client/
