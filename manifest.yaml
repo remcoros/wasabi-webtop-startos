@@ -65,6 +65,21 @@ interfaces:
     protocols:
       - tcp
       - http
+  rpc:
+    name: RPC Interface
+    description: Wasabi Json RPC Server (must be enabled in the settings)
+    tor-config:
+      port-mapping:
+        80: "37128"
+    lan-config:
+      443:
+        ssl: true
+        internal: 37128
+    ui: false
+    protocols:
+      - tcp
+      - http
+      - json-rpc
 dependencies:
   bitcoind:
     version: ">=0.21.1.2 <28.0.0"

@@ -46,8 +46,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
       managesettings: {
         type: "boolean",
         name: "Apply settings on startup",
-        description:
-          "Disable to manage your own settings in Wasabi",
+        description: "Disable to manage your own settings in Wasabi",
         default: true,
       },
       server: {
@@ -69,6 +68,64 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         variants: {
           bitcoind: {},
           none: {},
+        },
+      },
+      useTor: {
+        type: "boolean",
+        name: "Network anonymization (Tor)",
+        description: "Configure Wasabi to use the Tor network.",
+        default: true,
+      },
+      rpc: {
+        type: "object",
+        name: "RPC Settings",
+        description: "Json RPC server settings.",
+        spec: {
+          enable: {
+            type: "boolean",
+            name: "Enable",
+            description: "Enable the Json RPC server.",
+            default: false,
+          },
+          username: {
+            type: "string",
+            nullable: false,
+            name: "Username",
+            description: "The username for connecting to Wasabi over RPC.",
+            warning:
+              "You will need to restart all services that depend on Wasabi RPC Server.",
+            default: "wasabi",
+            masked: true,
+            pattern: "^[a-zA-Z0-9_]+$",
+            "pattern-description":
+              "Must be alphanumeric (can contain underscore).",
+          },
+          password: {
+            type: "string",
+            nullable: false,
+            name: "RPC Password",
+            description: "The password for connecting to Wasabi over RPC.",
+            warning:
+              "You will need to restart all services that depend on Wasabi RPC Server.",
+            default: {
+              charset: "a-z,2-7",
+              len: 20,
+            },
+            pattern: "^[a-zA-Z0-9_]+$",
+            "pattern-description":
+              "Must be alphanumeric (can contain underscore).",
+            copyable: true,
+            masked: true,
+          },
+          "rpc-tor-address": {
+            name: "RPC Tor Address",
+            description: "The Tor address of the RPC interface",
+            type: "pointer",
+            subtype: "package",
+            "package-id": "wasabi-webtop",
+            target: "tor-address",
+            interface: "rpc",
+          },
         },
       },
     },
