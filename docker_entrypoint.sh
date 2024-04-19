@@ -14,14 +14,14 @@ export PASSWORD="$(yq e '.password' /root/data/start9/config.yaml)"
 cat <<EOF >/root/data/start9/stats.yaml
 version: 2
 data:
-  "Username":
+  "UI Username":
     type: string
     value: "$CUSTOM_USER"
     description: "Username for logging into your Webtop."
     copyable: true
     qr: false
     masked: false
-  "Password":
+  "UI Password":
     type: string
     value: "$PASSWORD"
     description: "Password for logging into your Webtop."
@@ -29,6 +29,9 @@ data:
     qr: false
     masked: true
 EOF
+
+unset CUSTOM_USER
+unset PASSWORD
 
 # Copy default files
 cp /defaults/.backupignore /config/.backupignore
@@ -65,6 +68,67 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
     echo "Unknown server selected, not configuring Wasabi"
     ;;
   esac
+
+  # Use Tor?
+  if [ $(yq e '.wasabi.useTor' /root/data/start9/config.yaml) = "true" ]; then
+    echo "Configuring Wasabi for Tor"
+    yq e -i '.UseTor = true' -o=json /config/.walletwasabi/client/Config.json
+  else
+    echo "Disabling Tor in Wasabi"
+    yq e -i '.UseTor = false' -o=json /config/.walletwasabi/client/Config.json
+  fi
+
+  # Json RPC server
+  if [ $(yq e '.wasabi.rpc.enable' /root/data/start9/config.yaml) = "true" ]; then
+    echo "Configuring Wasabi Json RPC server"
+
+    export RPC_TOR_ADDRESS="$(yq e '.wasabi.rpc.rpc-tor-address' /root/data/start9/config.yaml)"
+    export RPC_ADDRESS=${RPC_TOR_ADDRESS%".onion"}.local
+    export RPC_USER=$(yq e '.wasabi.rpc.username' /root/data/start9/config.yaml)
+    export RPC_PASS=$(yq e '.wasabi.rpc.password' /root/data/start9/config.yaml)
+    
+    yq e -i '.JsonRpcServerEnabled = true' -o=json /config/.walletwasabi/client/Config.json
+    yq e -i '.JsonRpcUser = strenv(RPC_USER)' -o=json /config/.walletwasabi/client/Config.json
+    yq e -i '.JsonRpcPassword = strenv(RPC_PASS)' -o=json /config/.walletwasabi/client/Config.json
+    yq e -i '.JsonRpcServerPrefixes = ["http://+:37128/"]' -o=json /config/.walletwasabi/client/Config.json
+    
+cat << EOF >>/root/data/start9/stats.yaml
+  "Tor RPC Url":
+    type: string
+    value: "http://$RPC_TOR_ADDRESS"
+    description: "Tor Json RPC Url"
+    copyable: true
+    qr: false
+    masked: false
+  "LAN RPC Url":
+    type: string
+    value: "https://$RPC_ADDRESS"
+    description: "LAN Json RPC Url"
+    copyable: true
+    qr: false
+    masked: false
+  "RPC Username":
+    type: string
+    value: "$RPC_USER"
+    description: "Username for logging into RPC Server."
+    copyable: true
+    qr: false
+    masked: false
+  "RPC Password":
+    type: string
+    value: "$RPC_PASS"
+    description: "Password for logging into RPC Server."
+    copyable: true
+    qr: false
+    masked: true
+EOF
+
+    unset RPC_USER
+    unset RPC_PASS
+  else
+    echo "Disabling Wasabi Json RPC server"
+    yq e -i '.JsonRpcServerEnabled = false' -o=json /config/.walletwasabi/client/Config.json
+  fi
 fi
 
 # hack to disable systemd-inhibit, which Wasabi uses for sleep/shutdown detection
