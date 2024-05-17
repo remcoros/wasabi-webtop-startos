@@ -1,8 +1,8 @@
 id: wasabi-webtop
 title: "Wasabi"
-version: 2.0.7.1
+version: 2.0.7.2
 release-notes: |
-  * Initial release of Wasabi 2.0.7.1 for StartOS
+  * Update to Wasabi 2.0.7.2 - See [full changelog](https://github.com/zkSNACKs/WalletWasabi/releases/tag/v2.0.7.2)
 license: MIT
 wrapper-repo: "https://github.com/remcoros/wasabi-webtop-startos"
 upstream-repo: "https://github.com/zkSNACKs/WalletWasabi"
@@ -28,6 +28,7 @@ main:
     main: /root/data
     userdir: /config
   gpu-acceleration: false
+  shm-size-mb: 1024
 hardware-requirements:
   arch:
     - x86_64
