@@ -3,6 +3,7 @@ title: "Wasabi"
 version: 2.0.7.2
 release-notes: |
   * Update to Wasabi 2.0.7.2 - See [full changelog](https://github.com/zkSNACKs/WalletWasabi/releases/tag/v2.0.7.2)
+  * Add options to allow setting a custom backend and coordinator url
 license: MIT
 wrapper-repo: "https://github.com/remcoros/wasabi-webtop-startos"
 upstream-repo: "https://github.com/zkSNACKs/WalletWasabi"

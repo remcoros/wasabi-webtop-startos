@@ -8,8 +8,8 @@ export PUID=1000
 export PGID=1000
 export TZ=Etc/UTC
 export TITLE="$(yq e '.title' /root/data/start9/config.yaml)"
-export CUSTOM_USER="$(yq e '.username' /root/data/start9/config.yaml)"
-export PASSWORD="$(yq e '.password' /root/data/start9/config.yaml)"
+CUSTOM_USER="$(yq e '.username' /root/data/start9/config.yaml)"
+PASSWORD="$(yq e '.password' /root/data/start9/config.yaml)"
 
 cat <<EOF >/root/data/start9/stats.yaml
 version: 2
@@ -29,9 +29,6 @@ data:
     qr: false
     masked: true
 EOF
-
-unset CUSTOM_USER
-unset PASSWORD
 
 # Copy default files
 cp /defaults/.backupignore /config/.backupignore
@@ -78,19 +75,32 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
     yq e -i '.UseTor = false' -o=json /config/.walletwasabi/client/Config.json
   fi
 
+  # Wasabi Backend URI
+  MainNetBackendUri="$(yq e '.wasabi.mainNetBackendUri' /root/data/start9/config.yaml)"
+  yq e -i ".MainNetBackendUri = \"$MainNetBackendUri\"" -o=json /config/.walletwasabi/client/Config.json
+
+  # Custom Coordinator
+  MainNetCoordinatorUri="$(yq e '.wasabi.mainNetCoordinatorUri' /root/data/start9/config.yaml)"
+  if [ ! -z "$MainNetCoordinatorUri" ] && [ "$MainNetCoordinatorUri" != "null" ]; then
+    yq e -i ".MainNetCoordinatorUri = \"$MainNetCoordinatorUri\"" -o=json /config/.walletwasabi/client/Config.json
+  else
+    yq e -i "del(.MainNetCoordinatorUri)" -o=json /config/.walletwasabi/client/Config.json
+  fi
+
   # Json RPC server
   if [ $(yq e '.wasabi.rpc.enable' /root/data/start9/config.yaml) = "true" ]; then
     echo "Configuring Wasabi Json RPC server"
 
-    export RPC_TOR_ADDRESS="$(yq e '.wasabi.rpc.rpc-tor-address' /root/data/start9/config.yaml)"
-    export RPC_ADDRESS=${RPC_TOR_ADDRESS%".onion"}.local
-    export RPC_USER=$(yq e '.wasabi.rpc.username' /root/data/start9/config.yaml)
-    export RPC_PASS=$(yq e '.wasabi.rpc.password' /root/data/start9/config.yaml)
+    RPC_TOR_ADDRESS="$(yq e '.wasabi.rpc.rpc-tor-address' /root/data/start9/config.yaml)"
+    RPC_ADDRESS=${RPC_TOR_ADDRESS%".onion"}.local
+    RPC_USER=$(yq e '.wasabi.rpc.username' /root/data/start9/config.yaml)
+    RPC_PASS=$(yq e '.wasabi.rpc.password' /root/data/start9/config.yaml)
     
-    yq e -i '.JsonRpcServerEnabled = true' -o=json /config/.walletwasabi/client/Config.json
-    yq e -i '.JsonRpcUser = strenv(RPC_USER)' -o=json /config/.walletwasabi/client/Config.json
-    yq e -i '.JsonRpcPassword = strenv(RPC_PASS)' -o=json /config/.walletwasabi/client/Config.json
-    yq e -i '.JsonRpcServerPrefixes = ["http://+:37128/"]' -o=json /config/.walletwasabi/client/Config.json
+    yq e -i "
+      .JsonRpcServerEnabled = true |
+      .JsonRpcUser = \"$RPC_USER\" |
+      .JsonRpcPassword = \"$RPC_PASS\" |
+      .JsonRpcServerPrefixes = [\"http://+:37128/\"]" -o=json /config/.walletwasabi/client/Config.json
     
 cat << EOF >>/root/data/start9/stats.yaml
   "Tor RPC Url":
