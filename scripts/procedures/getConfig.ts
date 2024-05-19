@@ -1,6 +1,6 @@
-import { compat, types as T } from "../deps.ts";
+import { compat } from "../deps.ts";
 
-export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
+export const [getConfig, setConfigMatcher] = compat.getConfigAndMatcher({
   title: {
     type: "string",
     nullable: false,
@@ -76,6 +76,23 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         description: "Configure Wasabi to use the Tor network.",
         default: true,
       },
+      mainNetBackendUri: {
+        type: "string",
+        name: "Wasabi Backend url",
+        description: "URL of the Wasabi Backend. The default is: https://api.wasabiwallet.io/",
+        nullable: false,
+        pattern: "^https?://.+$",
+        "pattern-description": "A valid URL starting with http(s)://",
+        default: "https://api.wasabiwallet.io/"
+      },
+      mainNetCoordinatorUri: {
+        type: "string",
+        name: "Custom coordinator url",
+        description: "URL of the custom CoinJoin Coordinator to use",
+        nullable: true,
+        pattern: "^https?://.+$",
+        "pattern-description": "A valid URL starting with http(s)://"
+      },
       rpc: {
         type: "object",
         name: "RPC Settings",
@@ -131,3 +148,5 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     },
   },
 });
+
+export type Config = typeof setConfigMatcher._TYPE;
