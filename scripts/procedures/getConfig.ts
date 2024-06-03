@@ -84,15 +84,7 @@ export const [getConfig, setConfigMatcher] = compat.getConfigAndMatcher({
         pattern: "^https?://.+$",
         "pattern-description": "A valid URL starting with http(s)://",
         default: "https://api.wasabiwallet.io/"
-      },
-      mainNetCoordinatorUri: {
-        type: "string",
-        name: "Custom coordinator url",
-        description: "URL of the custom CoinJoin Coordinator to use",
-        nullable: true,
-        pattern: "^https?://.+$",
-        "pattern-description": "A valid URL starting with http(s)://"
-      },
+      },      
       rpc: {
         type: "object",
         name: "RPC Settings",
