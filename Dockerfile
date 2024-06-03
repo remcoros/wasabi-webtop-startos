@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-36987b11-ls57 AS buildstage
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-94e8f989-ls61 AS buildstage
 
 # these are specified in Makefile
 ARG ARCH
@@ -48,7 +48,10 @@ RUN \
     fonts-noto-color-emoji \
     fonts-noto-core \
     intel-media-va-driver \
+    libvulkan1 \
     mesa-va-drivers \
+    mesa-vulkan-drivers \
+    vulkan-tools \
     xserver-xorg-video-amdgpu \
     xserver-xorg-video-ati \
     xserver-xorg-video-intel \
@@ -87,10 +90,10 @@ RUN \
   # Wasabi requires this directory to exist
   mkdir -p /usr/share/desktop-directories/ && \
   # Download and install Wasabi
-  wget --quiet https://github.com/zkSNACKs/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb \
-               https://github.com/zkSNACKs/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb.asc \
-               https://github.com/zkSNACKs/WalletWasabi/releases/download/v${WASABI_VERSION}/SHA256SUMS.asc \
-               https://raw.githubusercontent.com/zkSNACKs/WalletWasabi/master/PGP.txt && \
+  wget --quiet https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb \
+               https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb.asc \
+               https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/SHA256SUMS.asc \
+               https://raw.githubusercontent.com/WalletWasabi/WalletWasabi/master/PGP.txt && \
   # verify pgp and sha signatures
   gpg --import PGP.txt && \
   gpg --status-fd 1 --verify Wasabi-${WASABI_VERSION}.deb.asc | grep -q "GOODSIG ${WASABI_PGP_SIG} zkSNACKs <zksnacks@gmail.com>" || exit 1 && \

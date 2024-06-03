@@ -79,14 +79,6 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
   MainNetBackendUri="$(yq e '.wasabi.mainNetBackendUri' /root/data/start9/config.yaml)"
   yq e -i ".MainNetBackendUri = \"$MainNetBackendUri\"" -o=json /config/.walletwasabi/client/Config.json
 
-  # Custom Coordinator
-  MainNetCoordinatorUri="$(yq e '.wasabi.mainNetCoordinatorUri' /root/data/start9/config.yaml)"
-  if [ ! -z "$MainNetCoordinatorUri" ] && [ "$MainNetCoordinatorUri" != "null" ]; then
-    yq e -i ".MainNetCoordinatorUri = \"$MainNetCoordinatorUri\"" -o=json /config/.walletwasabi/client/Config.json
-  else
-    yq e -i "del(.MainNetCoordinatorUri)" -o=json /config/.walletwasabi/client/Config.json
-  fi
-
   # Json RPC server
   if [ $(yq e '.wasabi.rpc.enable' /root/data/start9/config.yaml) = "true" ]; then
     echo "Configuring Wasabi Json RPC server"

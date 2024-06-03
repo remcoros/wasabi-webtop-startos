@@ -1,13 +1,13 @@
 id: wasabi-webtop
 title: "Wasabi"
-version: 2.0.7.2
+version: 2.0.8
 release-notes: |
-  * Update to Wasabi 2.0.7.2 - See [full changelog](https://github.com/zkSNACKs/WalletWasabi/releases/tag/v2.0.7.2)
-  * Add options to allow setting a custom backend and coordinator url
+  * Update to Wasabi 2.0.8 - See [full changelog](https://github.com/WalletWasabi/WalletWasabi/releases/tag/v2.0.8)
+  * Add options to allow setting a custom backend url
 license: MIT
 wrapper-repo: "https://github.com/remcoros/wasabi-webtop-startos"
-upstream-repo: "https://github.com/zkSNACKs/WalletWasabi"
-support-site: "https://github.com/zkSNACKs/WalletWasabi/issues"
+upstream-repo: "https://github.com/WalletWasabi/WalletWasabi"
+support-site: "https://github.com/WalletWasabi/WalletWasabi/issues"
 marketing-site: "https://wasabiwallet.io/"
 donation-url: "https://wasabiwallet.io/contribution.html"
 build: ["make"]
