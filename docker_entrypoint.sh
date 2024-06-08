@@ -50,6 +50,9 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
   # remove UTF8 BOM character, because yq does not like this
   sed -i '1s/^\xEF\xBB\xBF//' /config/.walletwasabi/client/Config.json
 
+  # Force enable GPU rendering
+  yq e -i '.EnableGpu = true' -o=json /config/.walletwasabi/client/Config.json    
+
   # private bitcoin server
   case "$(yq e '.wasabi.server.type' /root/data/start9/config.yaml)" in
   "bitcoind")

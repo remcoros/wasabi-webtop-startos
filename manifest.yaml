@@ -1,9 +1,10 @@
 id: wasabi-webtop
 title: "Wasabi"
-version: 2.0.8
+version: 2.0.8.1
 release-notes: |
-  * Update to Wasabi 2.0.8 - See [full changelog](https://github.com/WalletWasabi/WalletWasabi/releases/tag/v2.0.8)
+  * Update to Wasabi 2.0.8.1 - See [full changelog](https://github.com/WalletWasabi/WalletWasabi/releases/tag/v2.0.8.1)
   * Add options to allow setting a custom backend url
+  * Enabled GPU rendering support
 license: MIT
 wrapper-repo: "https://github.com/remcoros/wasabi-webtop-startos"
 upstream-repo: "https://github.com/WalletWasabi/WalletWasabi"
@@ -28,7 +29,7 @@ main:
   mounts:
     main: /root/data
     userdir: /config
-  gpu-acceleration: false
+  gpu-acceleration: true
   shm-size-mb: 1024
 hardware-requirements:
   arch:

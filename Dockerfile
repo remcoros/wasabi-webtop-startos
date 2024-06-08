@@ -25,12 +25,16 @@ RUN \
     # dark theme
     hsetroot \
     gnome-themes-extra \
-    compton \
+    xcompmgr \
     # desktop notifications
     xfce4-notifyd \
     libnotify-bin \
     notification-daemon \
     xclip \
+    # GPU support
+    xserver-xorg-video-all \
+    xserver-xorg-video-radeon \
+    va-driver-all \
     # other
     policykit-1 \
     wget \
@@ -47,17 +51,6 @@ RUN \
     docker-compose-plugin \
     fonts-noto-color-emoji \
     fonts-noto-core \
-    intel-media-va-driver \
-    libvulkan1 \
-    mesa-va-drivers \
-    mesa-vulkan-drivers \
-    vulkan-tools \
-    xserver-xorg-video-amdgpu \
-    xserver-xorg-video-ati \
-    xserver-xorg-video-intel \
-    xserver-xorg-video-nouveau \
-    xserver-xorg-video-qxl \
-    xserver-xorg-video-radeon \
     perl \
     locales-all && \
   # remove left-over locales and generate default

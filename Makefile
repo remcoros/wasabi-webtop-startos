@@ -1,4 +1,4 @@
-WASABI_VERSION := 2.0.8
+WASABI_VERSION := 2.0.8.1
 WASABI_PGP_SIG := 856348328949861E
 # sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.7/checksums-bsd
 YQ_VERSION := 4.40.7
