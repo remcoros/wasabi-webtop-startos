@@ -76,15 +76,6 @@ export const [getConfig, setConfigMatcher] = compat.getConfigAndMatcher({
         description: "Configure Wasabi to use the Tor network.",
         default: true,
       },
-      mainNetBackendUri: {
-        type: "string",
-        name: "Wasabi Backend url",
-        description: "URL of the Wasabi Backend. The default is: https://api.wasabiwallet.io/",
-        nullable: false,
-        pattern: "^https?://.+$",
-        "pattern-description": "A valid URL starting with http(s)://",
-        default: "https://api.wasabiwallet.io/"
-      },      
       rpc: {
         type: "object",
         name: "RPC Settings",
