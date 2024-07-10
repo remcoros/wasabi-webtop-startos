@@ -1,4 +1,5 @@
-WASABI_VERSION := 2.0.8.1
+WASABI_VERSION := 2.1.0 # version used to construct download filename
+WASABI_VERSION_TAG := 2.1.0.0 # Github tag
 WASABI_PGP_SIG := 856348328949861E
 # sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.7/checksums-bsd
 YQ_VERSION := 4.40.7
@@ -43,6 +44,7 @@ docker-images/x86_64.tar: manifest.yaml Dockerfile docker_entrypoint.sh $(ROOT_F
 		--build-arg ARCH=x86_64 \
 		--build-arg PLATFORM=amd64 \
 		--build-arg WASABI_VERSION=$(WASABI_VERSION) \
+		--build-arg WASABI_VERSION_TAG=$(WASABI_VERSION_TAG) \
 		--build-arg WASABI_PGP_SIG=$(WASABI_PGP_SIG) \
 		--build-arg YQ_VERSION=$(YQ_VERSION) \
 		--build-arg YQ_SHA=$(YQ_SHA_AMD64) \

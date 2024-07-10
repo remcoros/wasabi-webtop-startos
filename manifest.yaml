@@ -1,10 +1,9 @@
 id: wasabi-webtop
 title: "Wasabi"
-version: 2.0.8.1
+version: 2.1.0
 release-notes: |
-  * Update to Wasabi 2.0.8.1 - See [full changelog](https://github.com/WalletWasabi/WalletWasabi/releases/tag/v2.0.8.1)
-  * Add options to allow setting a custom backend url
-  * Enabled GPU rendering support
+  * Update to Wasabi 2.1.0 - See [full changelog](https://github.com/WalletWasabi/WalletWasabi/releases/tag/v2.1.0.0)
+  * Removed 'Wasabi Backend url' from StartOS config. This can now be set within Wasabi itself.
 license: MIT
 wrapper-repo: "https://github.com/remcoros/wasabi-webtop-startos"
 upstream-repo: "https://github.com/WalletWasabi/WalletWasabi"
@@ -85,7 +84,7 @@ interfaces:
       - json-rpc
 dependencies:
   bitcoind:
-    version: ">=0.21.1.2 <28.0.0"
+    version: ">=0.21.1.2 <29.0.0"
     requirement:
       type: "opt-out"
       how: "Select 'None' as the server"

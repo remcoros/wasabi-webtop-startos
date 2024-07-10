@@ -72,15 +72,11 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
   # Use Tor?
   if [ $(yq e '.wasabi.useTor' /root/data/start9/config.yaml) = "true" ]; then
     echo "Configuring Wasabi for Tor"
-    yq e -i '.UseTor = true' -o=json /config/.walletwasabi/client/Config.json
+    yq e -i '.UseTor = "Enabled"' -o=json /config/.walletwasabi/client/Config.json
   else
     echo "Disabling Tor in Wasabi"
-    yq e -i '.UseTor = false' -o=json /config/.walletwasabi/client/Config.json
+    yq e -i '.UseTor = "Disabled"' -o=json /config/.walletwasabi/client/Config.json
   fi
-
-  # Wasabi Backend URI
-  MainNetBackendUri="$(yq e '.wasabi.mainNetBackendUri' /root/data/start9/config.yaml)"
-  yq e -i ".MainNetBackendUri = \"$MainNetBackendUri\"" -o=json /config/.walletwasabi/client/Config.json
 
   # Json RPC server
   if [ $(yq e '.wasabi.rpc.enable' /root/data/start9/config.yaml) = "true" ]; then

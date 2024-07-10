@@ -1,9 +1,10 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-94e8f989-ls61 AS buildstage
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-10268292-ls70 AS buildstage
 
 # these are specified in Makefile
 ARG ARCH
 ARG PLATFORM
 ARG WASABI_VERSION
+ARG WASABI_VERSION_TAG
 ARG WASABI_PGP_SIG
 ARG YQ_VERSION
 ARG YQ_SHA
@@ -83,9 +84,9 @@ RUN \
   # Wasabi requires this directory to exist
   mkdir -p /usr/share/desktop-directories/ && \
   # Download and install Wasabi
-  wget --quiet https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb \
-               https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/Wasabi-${WASABI_VERSION}.deb.asc \
-               https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION}/SHA256SUMS.asc \
+  wget --quiet https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION_TAG}/Wasabi-${WASABI_VERSION}.deb \
+               https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION_TAG}/Wasabi-${WASABI_VERSION}.deb.asc \
+               https://github.com/WalletWasabi/WalletWasabi/releases/download/v${WASABI_VERSION_TAG}/SHA256SUMS.asc \
                https://raw.githubusercontent.com/WalletWasabi/WalletWasabi/master/PGP.txt && \
   # verify pgp and sha signatures
   gpg --import PGP.txt && \
