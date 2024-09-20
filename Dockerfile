@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-10268292-ls70 AS buildstage
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-12c6f55b-ls87 AS buildstage
 
 # these are specified in Makefile
 ARG ARCH
@@ -52,8 +52,11 @@ RUN \
     docker-compose-plugin \
     fonts-noto-color-emoji \
     fonts-noto-core \
+    mesa-vulkan-drivers \
+    vulkan-tools \
     perl \
-    locales-all && \
+    locales-all \
+    x11-apps && \
   # remove left-over locales and generate default
   rm -rf $(ls -d /usr/share/locale/* | grep -vw /usr/share/locale/en) && \
   localedef -i en_US -f UTF-8 en_US.UTF-8 && \
@@ -132,7 +135,7 @@ ENV \
 
 # add local files
 COPY /root /
-COPY --chmod=a+x ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
+COPY --chmod=755 ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 COPY --chmod=664 icon.png /kclient/public/icon.png
 COPY --chmod=664 icon.png /kclient/public/favicon.ico
 

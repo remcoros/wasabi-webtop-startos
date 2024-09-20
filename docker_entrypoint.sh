@@ -57,7 +57,8 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
   case "$(yq e '.wasabi.server.type' /root/data/start9/config.yaml)" in
   "bitcoind")
     echo "Configuring Wasabi for private Bitcoin Core node"
-    yq e -i '.MainNetBitcoinP2pEndPoint = "bitcoind.embassy:8333"' -o=json /config/.walletwasabi/client/Config.json    
+    BITCOIND_IP=$(getent hosts bitcoind.embassy | awk '{print $1}')
+    yq e -i ".MainNetBitcoinP2pEndPoint = \"$BITCOIND_IP:8333\"" -o=json /config/.walletwasabi/client/Config.json    
     ;;
   "none")
     echo "Configuring Wasabi for public Bitcoin nodes"
