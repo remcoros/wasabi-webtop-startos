@@ -1,4 +1,4 @@
 # run a compositor to get transparency effects
 xcompmgr -c &
 
-wassabee
+dbus-launch wassabee
