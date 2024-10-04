@@ -10,6 +10,7 @@ PKG_VERSION := $(shell yq e ".version" manifest.yaml)
 TS_FILES := $(shell find ./ -name \*.ts)
 ROOT_FILES := $(shell find ./root)
 ASSET_FILES := $(shell find ./assets/compat)
+PATCH_FILES := $(shell find ./patches)
 
 .DELETE_ON_ERROR:
 
@@ -37,7 +38,7 @@ clean:
 scripts/embassy.js: $(TS_FILES)
 	deno bundle scripts/embassy.ts scripts/embassy.js
 
-docker-images/x86_64.tar: manifest.yaml Dockerfile docker_entrypoint.sh $(ROOT_FILES)
+docker-images/x86_64.tar: manifest.yaml Dockerfile docker_entrypoint.sh $(ROOT_FILES) $(PATCH_FILES)
 	mkdir -p docker-images
 	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) \
 		--build-arg ARCH=x86_64 \

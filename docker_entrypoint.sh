@@ -133,6 +133,13 @@ EOF
   fi
 fi
 
+# remove reference to non-existing file, see: https://github.com/linuxserver/kclient/issues/8
+sed -i '/<script src="public\/js\/pcm-player\.js"><\/script>/d' /kclient/public/index.html
+
+# add '&reconnect=' setting to kclient html
+RECONNECT=$(yq e '.reconnect' /root/data/start9/config.yaml)
+sed -i "s/\(index\.html?autoconnect=1\)/&\&reconnect=$RECONNECT/" /kclient/public/index.html
+
 # hack to disable systemd-inhibit, which Wasabi uses for sleep/shutdown detection
 # we don't need it, since we run in a container and don't use systemd or sleep the system.
 # this gets rid of a lot of repeated warning logs
