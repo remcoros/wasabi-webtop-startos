@@ -1,9 +1,8 @@
 id: wasabi-webtop
 title: "Wasabi"
-version: 2.2.1.1
+version: 2.3.0.0
 release-notes: |
-  * Add 'Automatically reconnect' option. Enable this to reconnect to the desktop when the connection is lost or the browser tab has been idle for too long.
-  * fix a minor issue when browser tab becomes idle (Cannot read properties of undefined (reading 'lastActiveAt'))
+  * Update to Wasabi 2.3.0.0 - See [full changelog](https://github.com/WalletWasabi/WalletWasabi/releases/tag/v2.3.0.0)
 license: MIT
 wrapper-repo: "https://github.com/remcoros/wasabi-webtop-startos"
 upstream-repo: "https://github.com/WalletWasabi/WalletWasabi"

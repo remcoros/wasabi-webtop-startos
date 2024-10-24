@@ -1,5 +1,5 @@
-WASABI_VERSION := 2.2.1.0 # version used to construct download filename
-WASABI_VERSION_TAG := 2.2.1.0 # Github tag
+WASABI_VERSION := 2.3.0.0 # version used to construct download filename
+WASABI_VERSION_TAG := 2.3.0.0 # Github tag
 WASABI_PGP_SIG := 856348328949861E
 # sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.7/checksums-bsd
 YQ_VERSION := 4.40.7
@@ -36,7 +36,7 @@ clean:
 	rm -f scripts/*.js
 
 scripts/embassy.js: $(TS_FILES)
-	deno bundle scripts/embassy.ts scripts/embassy.js
+	deno run --allow-read --allow-write --allow-env --allow-net scripts/bundle.ts
 
 docker-images/x86_64.tar: manifest.yaml Dockerfile docker_entrypoint.sh $(ROOT_FILES) $(PATCH_FILES)
 	mkdir -p docker-images
