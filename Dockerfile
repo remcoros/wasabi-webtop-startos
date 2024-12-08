@@ -2,7 +2,7 @@
 # modified to apply 'novnc.patch' (fixing a disconnect/reconnect issue)
 FROM node:12-buster AS wwwstage
 
-ARG KASMWEB_RELEASE="5ba4695e6526a27b8e38ec8d55dc33b39143e68a"
+ARG KASMWEB_RELEASE="46412d23aff1f45dffa83fafb04a683282c8db58"
 
 RUN \
   echo "**** build clientside ****" && \
@@ -33,7 +33,7 @@ RUN \
   cp index.html vnc.html && \
   mkdir Downloads
 
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-8e2585df-ls92 AS buildstage
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-42e0f35a-ls96 AS buildstage
 
 # these are specified in Makefile
 ARG ARCH
