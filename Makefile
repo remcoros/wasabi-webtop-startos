@@ -1,5 +1,5 @@
-WASABI_VERSION := 2.4.0 # version used to construct download filename
-WASABI_VERSION_TAG := 2.4.0 # Github tag
+WASABI_VERSION := 2.5.0 # version used to construct download filename
+WASABI_VERSION_TAG := 2.5.0 # Github tag
 WASABI_PGP_SIG := 856348328949861E
 # sha256 hashes can be found in https://github.com/mikefarah/yq/releases/download/v4.40.7/checksums-bsd
 YQ_VERSION := 4.40.7
