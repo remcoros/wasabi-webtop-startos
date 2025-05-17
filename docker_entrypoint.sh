@@ -38,12 +38,25 @@ mkdir -p /config/.config/openbox
 cp /defaults/autostart /config/.config/openbox/autostart
 chown -R $PUID:$PGID /config/.config/openbox
 
+# Copy default Wasabi files
+mkdir -p /config/.walletwasabi/client/
 if [ ! -f /config/.walletwasabi/client/Config.json ]; then
   echo "No Wasabi config file found, creating default"
-  mkdir -p /config/.walletwasabi/client/
   cp /defaults/.walletwasabi/client/Config.json /config/.walletwasabi/client/Config.json
-  chown -R $PUID:$PGID /config/.walletwasabi
 fi
+
+if [ ! -f /config/.walletwasabi/client/UiConfig.json ]; then
+  echo "No Wasabi UI config file found, creating default"
+  cp /defaults/.walletwasabi/client/UiConfig.json /config/.walletwasabi/client/UiConfig.json
+fi
+
+chown -R $PUID:$PGID /config/.walletwasabi
+
+# remove UTF8 BOM character, because yq does not like this
+sed -i '1s/^\xEF\xBB\xBF//' /config/.walletwasabi/client/UiConfig.json
+
+# Force windowstate to full-screen. We used to do this through the openbox rc.xml config, but this causes graphical glitches in Wasabi.
+yq e -i '.WindowState = "FullScreen"' -o=json /config/.walletwasabi/client/UiConfig.json
 
 # Manage Wasabi settings?
 if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; then
@@ -51,19 +64,30 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
   sed -i '1s/^\xEF\xBB\xBF//' /config/.walletwasabi/client/Config.json
 
   # Force enable GPU rendering
-  yq e -i '.EnableGpu = true' -o=json /config/.walletwasabi/client/Config.json    
+  yq e -i '.EnableGpu = true' -o=json /config/.walletwasabi/client/Config.json
+
+  # Update config version so Wasabi will not try to migrate it
+  yq e -i '.ConfigVersion = 2' -o=json /config/.walletwasabi/client/Config.json
 
   # private bitcoin server
   case "$(yq e '.wasabi.server.type' /root/data/start9/config.yaml)" in
   "bitcoind")
-    echo "Configuring Wasabi for private Bitcoin Core node"
+    echo "Configuring Wasabi for private Bitcoin node"
     BITCOIND_IP=$(getent hosts bitcoind.embassy | awk '{print $1}')
-    yq e -i ".MainNetBitcoinP2pEndPoint = \"$BITCOIND_IP:8333\"" -o=json /config/.walletwasabi/client/Config.json    
+    BITCOIND_USER=$(yq e '.wasabi.server.user' /root/data/start9/config.yaml)
+    BITCOIND_PASS=$(yq e '.wasabi.server.password' /root/data/start9/config.yaml)
+    yq e -i "
+      .UseBitcoinRpc = true |
+      .MainNetBitcoinRpcEndPoint = \"$BITCOIND_IP:8332\" |
+      .MainNetBitcoinRpcCredentialString = \"$BITCOIND_USER:$BITCOIND_PASS\"" -o=json /config/.walletwasabi/client/Config.json
     ;;
   "none")
     echo "Configuring Wasabi for public Bitcoin nodes"
-    # reset it to default (127.0.0.1:8333), an empty string is not allowed
-    yq e -i '.MainNetBitcoinP2pEndPoint = "127.0.0.1:8333"' -o=json /config/.walletwasabi/client/Config.json
+    # reset it to default (127.0.0.1:8332), an empty string is not allowed
+    yq e -i "
+      .UseBitcoinRpc = false |
+      .MainNetBitcoinRpcEndPoint = \"127.0.0.1:8332\" |
+      .MainNetBitcoinRpcCredentialString = \"\"" -o=json /config/.walletwasabi/client/Config.json
     ;;
   *)
     echo "Unknown server selected, not configuring Wasabi"
@@ -87,14 +111,14 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
     RPC_ADDRESS=${RPC_TOR_ADDRESS%".onion"}.local
     RPC_USER=$(yq e '.wasabi.rpc.username' /root/data/start9/config.yaml)
     RPC_PASS=$(yq e '.wasabi.rpc.password' /root/data/start9/config.yaml)
-    
+
     yq e -i "
       .JsonRpcServerEnabled = true |
       .JsonRpcUser = \"$RPC_USER\" |
       .JsonRpcPassword = \"$RPC_PASS\" |
       .JsonRpcServerPrefixes = [\"http://+:37128/\"]" -o=json /config/.walletwasabi/client/Config.json
-    
-cat << EOF >>/root/data/start9/stats.yaml
+
+    cat <<EOF >>/root/data/start9/stats.yaml
   "Tor RPC Url":
     type: string
     value: "http://$RPC_TOR_ADDRESS"

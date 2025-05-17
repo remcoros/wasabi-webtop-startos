@@ -7,7 +7,7 @@ export const [getConfig, setConfigMatcher] = compat.getConfigAndMatcher({
     name: "Webtop Title",
     description:
       "This value will be displayed as the title of your browser tab.",
-    default: "Start9 Wasabi on Webtop",
+    default: "Wasabi on StartOS",
     pattern: '^[^\\n"]*$',
     "pattern-description": "Must not contain newline or quote characters.",
     masked: false,
@@ -41,7 +41,8 @@ export const [getConfig, setConfigMatcher] = compat.getConfigAndMatcher({
   reconnect: {
     type: "boolean",
     name: "Automatically reconnect",
-    description: "Automatically reconnect when the connection to the desktop is lost or the browser tab has been idle for too long.",
+    description:
+      "Automatically reconnect when the connection to the desktop is lost or the browser tab has been idle for too long.",
     default: false,
   },
   wasabi: {
@@ -57,22 +58,43 @@ export const [getConfig, setConfigMatcher] = compat.getConfigAndMatcher({
       },
       server: {
         type: "union",
-        name: "Bitcoin Core",
+        name: "Bitcoin Node",
         description:
-          "<p>The Bitcoin Core node to connect to:</p><ul><li><strong>Bitcoin Core</strong>: Use the Bitcoin Core service installed on your server.</li><li><strong>None</strong>: Use public Bitcoin nodes.</li></ul>",
+          "<p>The Bitcoin node to connect to:</p><ul><li><strong>Bitcoin Node</strong>: Use the Bitcoin service installed on your server.</li><li><strong>None</strong>: Use public Bitcoin nodes.</li></ul>",
         tag: {
           id: "type",
           name: "Bitcoin Node Type",
           "variant-names": {
-            bitcoind: "Bitcoin Core (recommended)",
+            bitcoind: "Bitcoin Node (recommended)",
             none: "None",
           },
           description:
-            "<p>The Bitcoin Core node to connect to:</p><ul><li><strong>Bitcoin Core</strong>: Use the Bitcoin Core service installed on your server.</li><li><strong>None</strong>: Use public Bitcoin nodes.</li></ul>",
+            "<p>The Bitcoin node to connect to:</p><ul><li><strong>Bitcoin Node</strong>: Use the Bitcoin service installed on your server.</li><li><strong>None</strong>: Use public Bitcoin nodes.</li></ul>",
         },
         default: "bitcoind",
         variants: {
-          bitcoind: {},
+          bitcoind: {
+            user: {
+              type: "pointer",
+              name: "RPC Username",
+              description: "The username for Bitcoin's RPC interface",
+              subtype: "package",
+              "package-id": "bitcoind",
+              target: "config",
+              multi: false,
+              selector: "$.rpc.username",
+            },
+            password: {
+              type: "pointer",
+              name: "RPC Password",
+              description: "The password for Bitcoin's RPC interface",
+              subtype: "package",
+              "package-id": "bitcoind",
+              target: "config",
+              multi: false,
+              selector: "$.rpc.password",
+            },
+          },
           none: {},
         },
       },

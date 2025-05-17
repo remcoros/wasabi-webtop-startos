@@ -33,7 +33,7 @@ RUN \
   cp index.html vnc.html && \
   mkdir Downloads
 
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-2db38f7a-ls103 AS buildstage
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-7784e3cf-ls114 AS buildstage
 
 # these are specified in Makefile
 ARG ARCH
@@ -47,6 +47,9 @@ ARG YQ_SHA
 RUN \
   echo "**** install packages ****" && \
   apt-get update && \
+  # remove dunst, we use xfce4-notifyd instead
+  DEBIAN_FRONTEND=noninteractive \
+  apt-get remove -y dunst && \
   DEBIAN_FRONTEND=noninteractive \
   apt-get install -y --no-install-recommends \
     exo-utils \
@@ -65,7 +68,6 @@ RUN \
     # desktop notifications
     xfce4-notifyd \
     libnotify-bin \
-    notification-daemon \
     xclip \
     # GPU support
     xserver-xorg-video-all \

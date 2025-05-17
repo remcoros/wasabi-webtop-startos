@@ -20,7 +20,7 @@ Now your Wasabi on Webtop is ready to be visited in your browser!
 
 3. Webtop utilizes HTTPS Basic Authentication. When users connect for the first time, their browser will automatically prompt them to log in. Subsequent connections will not require re-entering login credentials, unless the credentials are no longer valid.
 
-4. This version of Webtop is Debian Linux based. A default configuration for Wasabi is installed if none exist in your user (/config) directory. By default it connects to the installed `bitcoin core` instance.
+4. This version of Webtop is Debian Linux based. A default configuration for Wasabi is installed if none exist in your user (/config) directory. By default it connects to the installed `bitcoin` instance.
 
 5. Wasabi on Webtop does not support camera's or usb devices. Which is something to remember when setting up wallets.
 

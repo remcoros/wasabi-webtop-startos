@@ -1,0 +1,17 @@
+{
+  "Oobe": false,
+  "LastVersionHighlightsDisplayed": "2.3.1",
+  "WindowState": "FullScreen",
+  "FeeTarget": 2,
+  "Autocopy": true,
+  "AutoPaste": false,
+  "IsCustomChangeAddress": false,
+  "PrivacyMode": false,
+  "DarkModeEnabled": true,
+  "LastSelectedWallet": "Wallet",
+  "RunOnSystemStartup": false,
+  "HideOnClose": false,
+  "SendAmountConversionReversed": false,
+  "WindowWidth": 1440,
+  "WindowHeight": 661
+}
