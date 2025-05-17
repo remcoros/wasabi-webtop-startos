@@ -758,7 +758,8 @@
             class="Wasabi Wallet"
             title="Wasabi Wallet"
             type="normal">
-            <fullscreen>yes</fullscreen>
+            <!-- forcing fullscreen here causes graphical glitches in wasabi, we do this in docker_entrypoint/UiConfig.json now -->
+            <!-- <fullscreen>yes</fullscreen> -->
         </application>
         <!--
   # this is an example with comments through out. use these to make your
