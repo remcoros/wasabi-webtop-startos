@@ -1,5 +1,5 @@
 import { matches, FileHelper, T } from '@start9labs/start-sdk'
-const { object, string, oneOf, literal } = matches
+const { object, boolean, oneOf, literal } = matches
 
 /*
  * UiConfig.json
@@ -8,6 +8,7 @@ const { object, string, oneOf, literal } = matches
 // not all possible fields of Wasabi config are included, so
 // so do not write a new file, use 'merge' instead
 const UiConfigShape = object({
+  Oobe: boolean,
   WindowState: oneOf(
     literal('Normal'),
     literal('Minimized'),
