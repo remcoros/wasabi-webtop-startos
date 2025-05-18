@@ -73,7 +73,8 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
     '/config/.walletwasabi/client/UiConfig.json',
   )
   uiConfigFile.merge(effects, {
-    WindowState: 'FullScreen',
+    Oobe: false,
+    WindowState: 'Maximized',
   })
 
   if (conf.wasabi.managesettings) {
