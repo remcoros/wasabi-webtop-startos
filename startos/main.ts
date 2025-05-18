@@ -1,7 +1,11 @@
-import * as fs from 'node:fs/promises'
 import { sdk } from './sdk'
-import { T, utils } from '@start9labs/start-sdk'
-import { uiPort } from './utils'
+import { T } from '@start9labs/start-sdk'
+import {
+  ensureFileExists,
+  removeUtf8BOMCharacter,
+  resolveIPv4Address,
+  uiPort,
+} from './utils'
 import { store } from './file-models/store.yaml'
 import { configFile, ConfigFileType } from './file-models/config.json'
 import { uiConfigFile } from './file-models/uiConfig.json'
@@ -47,44 +51,27 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
    * Wasabi settings
    */
 
-  // create default config file if it does not exist
-  const configFilePath = `${subcontainer.rootfs}/config/.walletwasabi/client/Config.json`
-  try {
-    await fs.access(configFilePath, fs.constants.F_OK) // check if configFile exists
-  } catch (e) {
-    console.log('Config.json file does not exist, creating it')
-    await subcontainer.exec([
-      'sh',
-      '-c',
-      `
-         mkdir -p /config/.walletwasabi/client && 
-         cp /defaults/.walletwasabi/client/Config.json /config/.walletwasabi/client/Config.json && 
-         chown -R 1000:1000 /config/.walletwasabi
-        `,
-    ])
-  }
+  // create default config files if they do not exist
+  await ensureFileExists(
+    subcontainer,
+    '/defaults/.walletwasabi/client/Config.json',
+    '/config/.walletwasabi/client/Config.json',
+  )
+  await ensureFileExists(
+    subcontainer,
+    '/defaults/.walletwasabi/client/UiConfig.json',
+    '/config/.walletwasabi/client/UiConfig.json',
+  )
 
-  const uiConfigFilePath = `${subcontainer.rootfs}/config/.walletwasabi/client/UiConfig.json`
-  try {
-    await fs.access(uiConfigFilePath, fs.constants.F_OK) // check if configFile exists
-  } catch (e) {
-    console.log('UiConfig.json file does not exist, creating it')
-    await subcontainer.exec([
-      'cp',
-      '/defaults/.walletwasabi/client/UiConfig.json',
-      '/config/.walletwasabi/client/UiConfig.json',
-    ])
-  }
-
-  await subcontainer.exec([
-    'chown',
-    '-R',
-    '1000:1000',
-    '/config/.walletwasabi/client',
-  ])
+  // set permissions to the webtop user
+  await subcontainer.exec(['chown', '-R', '1000:1000', '/config/.walletwasabi'])
 
   // Force windowstate to full-screen. We used to do this through the openbox rc.xml
   // config, but this causes graphical glitches in Wasabi.
+  await removeUtf8BOMCharacter(
+    subcontainer,
+    '/config/.walletwasabi/client/UiConfig.json',
+  )
   uiConfigFile.merge(effects, {
     WindowState: 'FullScreen',
   })
@@ -97,14 +84,9 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
 
     // server config
     if (conf.wasabi.server.type == 'bitcoind') {
-      // get ip of bitcoind container      
-      const bitcoindIp = (
-        await subcontainer.exec([
-          'sh',
-          '-c',
-          "getent hosts bitcoind.startos | awk '{print $1}",
-        ])
-      ).stdout
+      // get ip of bitcoind container (using hostname does not work currently in Wasabi)
+      // @todo remove when fixed in Wasabi (https://github.com/WalletWasabi/WalletWasabi/pull/13915)
+      const bitcoindIp = await resolveIPv4Address('bitcoind.startos')
       config = {
         ...config,
         UseBitcoinRpc: true,
@@ -133,6 +115,10 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
     }
 
     // merge with existing config file
+    await removeUtf8BOMCharacter(
+      subcontainer,
+      '/config/.walletwasabi/client/Config.json',
+    )
     configFile.merge(effects, config)
   }
 
