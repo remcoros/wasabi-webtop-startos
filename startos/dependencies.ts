@@ -5,14 +5,11 @@ import { config as bitcoinConfig } from 'bitcoind-startos/startos/actions/config
 export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   const conf = await store.read().const(effects)
 
-  // no dependencies if we are not managing wasabi settings
-  if (!conf?.wasabi.managesettings) {
-    return {}
-  }
-
-  var serverType = conf.wasabi.server.type
-  if (serverType == 'bitcoind') {
-    await sdk.action.request(effects, 'bitcoind', bitcoinConfig, 'important', {
+  const managesettings = conf?.wasabi.managesettings
+  const serverType = conf?.wasabi.server.type
+  if (managesettings && serverType == 'bitcoind') {
+    await sdk.action.request(effects, 'bitcoind', bitcoinConfig, 'critical', {
+      replayId: 'request-compact-block-filters',
       when: {
         condition: 'input-not-matches',
         once: false,
@@ -36,6 +33,9 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
       },
     }
   }
+
+  // clear request if not using bitcoind
+  await sdk.action.clearRequest(effects, 'request-compact-block-filters')
 
   return {}
 })
