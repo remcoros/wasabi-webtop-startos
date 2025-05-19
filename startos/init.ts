@@ -4,8 +4,7 @@ import { setInterfaces } from './interfaces'
 import { versions } from './versions'
 import { actions } from './actions'
 import { config } from './actions/config'
-import { createDefaultStore, store } from './file-models/store.yaml'
-import { generateRpcPassword } from './utils'
+import { createDefaultStore } from './file-models/store.yaml'
 
 // **** PreInstall ****
 const preInstall = sdk.setupPreInstall(async ({ effects }) => {
