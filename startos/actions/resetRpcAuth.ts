@@ -38,7 +38,7 @@ export const resetRpcAuth = sdk.Action.withoutInput(
     })
 
     // request to create rpc credentials in bitcoind
-    await sdk.action.request(
+    await sdk.action.createTask(
       effects,
       'bitcoind',
       generateRpcUserDependent,

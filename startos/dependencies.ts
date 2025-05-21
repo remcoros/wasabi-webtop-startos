@@ -8,7 +8,7 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   const managesettings = conf?.wasabi.managesettings
   const serverType = conf?.wasabi.server.type
   if (managesettings && serverType == 'bitcoind') {
-    await sdk.action.request(effects, 'bitcoind', bitcoinConfig, 'critical', {
+    await sdk.action.createTask(effects, 'bitcoind', bitcoinConfig, 'critical', {
       replayId: 'request-compact-block-filters',
       when: {
         condition: 'input-not-matches',
@@ -35,7 +35,7 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   }
 
   // clear request if not using bitcoind
-  await sdk.action.clearRequest(effects, 'request-compact-block-filters')
+  await sdk.action.clearTask(effects, 'request-compact-block-filters')
 
   return {}
 })

@@ -1,7 +1,12 @@
-import { T, SubContainer } from '@start9labs/start-sdk'
+import { T } from '@start9labs/start-sdk'
 import crypto from 'crypto'
 import * as fs from 'node:fs/promises'
 import { promises as dns } from 'dns'
+import {
+  SubContainer,
+  SubContainerOwned,
+} from '@start9labs/start-sdk/package/lib/util/SubContainer'
+import { Manifest } from '@start9labs/start-sdk/base/lib/types'
 
 // uiPort
 export const uiPort = 3000
@@ -17,11 +22,10 @@ export const generateRpcPassword = (len = 16) =>
  * Checks if a file exists at the given path in the subcontainer.
  * If it does not exist, it copies the file from the source path to the destination path.
  */
-export async function ensureFileExists(
-  subcontainer: SubContainer<T.SDKManifest, T.Effects>,
-  src: string,
-  dest: string,
-) {
+export async function ensureFileExists<
+  Manifest extends T.SDKManifest,
+  Effects extends T.Effects,
+>(subcontainer: SubContainer<Manifest, Effects>, src: string, dest: string) {
   const destPath = `${subcontainer.rootfs}${dest}`
   try {
     await fs.access(destPath, fs.constants.F_OK)
@@ -59,9 +63,9 @@ export async function resolveIPv4Address(hostname: string): Promise<string> {
  * @param subcontainer - The subcontainer in which the file resides.
  * @param filePath - The path to the file from which to remove the BOM character.
  */
-export async function removeUtf8BOMCharacter(
-  subcontainer: SubContainer<T.SDKManifest, T.Effects>,
-  filePath: string,
-) {
+export async function removeUtf8BOMCharacter<
+  Manifest extends T.SDKManifest,
+  Effects extends T.Effects,
+>(subcontainer: SubContainer<Manifest, Effects>, filePath: string) {
   await subcontainer.exec(['sed', '-i', `1s/^\uFEFF//`, filePath])
 }
