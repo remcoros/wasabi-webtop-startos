@@ -190,7 +190,7 @@ async function writeSettings(effects: T.Effects, input: InputSpec) {
     // })
   }
 
-  await sdk.action.clearRequest(effects, 'reset-rpc-auth')
+  await sdk.action.clearTask(effects, 'reset-rpc-auth')
 
   if (
     input.wasabi.managesettings &&
@@ -212,10 +212,10 @@ async function writeSettings(effects: T.Effects, input: InputSpec) {
         input: {},
       })
     } else {
-      await sdk.action.clearRequest(effects, 'reset-rpc-auth')
+      await sdk.action.clearTask(effects, 'reset-rpc-auth')
     }
   } else {
-    await sdk.action.clearRequest(effects, 'reset-rpc-auth')
+    await sdk.action.clearTask(effects, 'reset-rpc-auth')
   }
 
   await store.merge(effects, {
