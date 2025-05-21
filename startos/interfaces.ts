@@ -17,7 +17,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     masked: false,
     username: null,
     path: '',
-    search: {},
+    query: {},
   })
 
   const uiReceipt = await uiMultiOrigin.export([ui])
@@ -40,7 +40,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
       masked: false,
       username: null,
       path: '',
-      search: {},
+      query: {},
     })
     const rpcReceipt = await rpcMultiOrigin.export([rpc])
     receipts.push(rpcReceipt)
