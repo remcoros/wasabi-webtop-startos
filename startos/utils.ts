@@ -2,11 +2,7 @@ import { T } from '@start9labs/start-sdk'
 import crypto from 'crypto'
 import * as fs from 'node:fs/promises'
 import { promises as dns } from 'dns'
-import {
-  SubContainer,
-  SubContainerOwned,
-} from '@start9labs/start-sdk/package/lib/util/SubContainer'
-import { Manifest } from '@start9labs/start-sdk/base/lib/types'
+import { SubContainer } from '@start9labs/start-sdk/package/lib/util/SubContainer'
 
 // uiPort
 export const uiPort = 3000
