@@ -1,5 +1,5 @@
 import { sdk } from '../sdk'
-import { store } from '../file-models/store.yaml'
+import { store } from '../fileModels/store.yaml'
 import { generateRpcPassword } from '../utils'
 import { generateRpcUserDependent } from 'bitcoind-startos/startos/actions/generateRpcUserDependent'
 
