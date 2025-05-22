@@ -6,9 +6,9 @@ import {
   resolveIPv4Address,
   uiPort,
 } from './utils'
-import { store } from './file-models/store.yaml'
-import { configFile, ConfigFileType } from './file-models/config.json'
-import { uiConfigFile } from './file-models/uiConfig.json'
+import { store } from './fileModels/store.yaml'
+import { configFile, ConfigFileType } from './fileModels/config.json'
+import { uiConfigFile } from './fileModels/uiConfig.json'
 
 export const main = sdk.setupMain(async ({ effects, started }) => {
   console.info('setupMain: Setting up Wasabi webtop...')
