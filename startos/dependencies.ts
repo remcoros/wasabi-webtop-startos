@@ -1,4 +1,4 @@
-import { store } from './file-models/store.yaml'
+import { store } from './fileModels/store.yaml'
 import { sdk } from './sdk'
 import { config as bitcoinConfig } from 'bitcoind-startos/startos/actions/config/config'
 
