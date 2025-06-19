@@ -64,7 +64,7 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
   )
 
   // set permissions to the webtop user
-  await subcontainer.exec(['chown', '-R', '1000:1000', '/config/.walletwasabi'])
+  await subcontainer.exec(['chown', '-R', '1000:1000', '/config'])
 
   // Force windowstate to full-screen. We used to do this through the openbox rc.xml
   // config, but this causes graphical glitches in Wasabi.
@@ -124,25 +124,22 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
   }
 
   /*
-   * Health checks
-   */
-  const healthReceipts: T.HealthCheck[] = []
-
-  /*
    * Daemons
    */
-  return sdk.Daemons.of(effects, started, healthReceipts).addDaemon('primary', {
+  return sdk.Daemons.of(effects, started).addDaemon('primary', {
     subcontainer: subcontainer,
-    command: ['docker_entrypoint.sh'],
-    runAsInit: true, // If true, this daemon will be run as PID 1 in the container.
-    env: {
-      PUID: '1000',
-      PGID: '1000',
-      TZ: 'Etc/UTC',
-      TITLE: conf.title,
-      CUSTOM_USER: conf.username,
-      PASSWORD: conf.password,
-      RECONNECT: conf.reconnect ? 'true' : 'false',
+    exec: {
+      command: ['docker_entrypoint.sh'],
+      runAsInit: true, // If true, this daemon will be run as PID 1 in the container.
+      env: {
+        PUID: '1000',
+        PGID: '1000',
+        TZ: 'Etc/UTC',
+        TITLE: conf.title,
+        CUSTOM_USER: conf.username,
+        PASSWORD: conf.password,
+        RECONNECT: conf.reconnect ? 'true' : 'false',
+      },
     },
     ready: {
       display: 'Web Interface',
