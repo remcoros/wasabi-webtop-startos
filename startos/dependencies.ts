@@ -1,6 +1,6 @@
 import { store } from './fileModels/store.yaml'
 import { sdk } from './sdk'
-import { config as bitcoinConfig } from 'bitcoind-startos/startos/actions/config/config'
+import { config as bitcoinConfig } from 'bitcoind-startos/startos/actions/config/other'
 
 export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
   const conf = await store.read().const(effects)
@@ -26,7 +26,7 @@ export const setDependencies = sdk.setupDependencies(async ({ effects }) => {
     })
 
     return {
-      bitcoind: {
+      bitcoind: {        
         kind: 'exists',
         // @todo update version range
         versionRange: '^28.1.0-0',
