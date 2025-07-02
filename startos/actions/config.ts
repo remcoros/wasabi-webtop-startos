@@ -55,34 +55,32 @@ export const inputSpec = InputSpec.of({
           'Disable to manage your own server and proxy settings in Wasabi',
         default: true,
       }),
-      server: Value.dynamicUnion(
-        async ({ effects }) => {
-          // determine default server type and disabled options
-          const installedPackages = await effects.getInstalledPackages()
-          let serverType: 'bitcoind' | 'none' = installedPackages.includes(
-            'bitcoind',
-          )
-            ? 'bitcoind'
-            : 'none'
+      server: Value.dynamicUnion(async ({ effects }) => {
+        // determine default server type and disabled options
+        const installedPackages = await effects.getInstalledPackages()
+        let serverType: 'bitcoind' | 'none' = installedPackages.includes(
+          'bitcoind',
+        )
+          ? 'bitcoind'
+          : 'none'
 
-          return {
-            name: 'Bitcoin Node',
-            description: 'The Bitcoin node to connect to',
-            default: serverType,
-            disabled: false,
-          }
-        },
-        Variants.of({
-          bitcoind: {
-            name: 'Local Node (recommended)',
-            spec: InputSpec.of({}),
-          },
-          none: {
-            name: 'None (not recommended)',
-            spec: InputSpec.of({}),
-          },
-        }),
-      ),
+        return {
+          name: 'Bitcoin Node',
+          description: 'The Bitcoin node to connect to',
+          default: serverType,
+          disabled: false,
+          variants: Variants.of({
+            bitcoind: {
+              name: 'Local Node (recommended)',
+              spec: InputSpec.of({}),
+            },
+            none: {
+              name: 'None (not recommended)',
+              spec: InputSpec.of({}),
+            },
+          }),
+        }
+      }),
       useTor: Value.toggle({
         name: 'Use Tor',
         description: 'Configure Wasabi to use the Tor network',
