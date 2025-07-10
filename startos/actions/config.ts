@@ -179,15 +179,7 @@ async function readSettings(effects: T.Effects): Promise<PartialInputSpec> {
 }
 
 async function writeSettings(effects: T.Effects, input: InputSpec) {
-  if (input.wasabi.managesettings && input.wasabi.server.selection == 'none') {
-    console.log('using public server')
-
-    // @todo this does not work (request config action from config action)
-    // await sdk.action.requestOwn(effects, config, 'important', {
-    //   reason: 'Change settings to not use a public server',
-    // })
-  }
-
+  // clear any previous reset-rpc-auth action
   await sdk.action.clearTask(effects, 'reset-rpc-auth')
 
   if (
@@ -209,11 +201,7 @@ async function writeSettings(effects: T.Effects, input: InputSpec) {
         effects,
         input: {},
       })
-    } else {
-      await sdk.action.clearTask(effects, 'reset-rpc-auth')
     }
-  } else {
-    await sdk.action.clearTask(effects, 'reset-rpc-auth')
   }
 
   await store.merge(effects, {
