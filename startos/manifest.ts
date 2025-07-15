@@ -11,6 +11,7 @@ export const manifest = setupManifest({
   wrapperRepo: 'https://github.com/remcoros/wasabi-webtop-startos',
   upstreamRepo: 'https://github.com/remcoros/wasabi-webtop-startos',
   supportSite: 'https://github.com/WalletWasabi/WalletWasabi/issues',
+  docsUrl: 'https://github.com/remcoros/wasabi-webtop-startos/blob/main/instructions.md',
   marketingSite: 'https://wasabiwallet.io/',
   donationUrl: 'https://wasabiwallet.io/',
   description: {

@@ -74,7 +74,7 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
   )
   uiConfigFile.merge(effects, {
     Oobe: false,
-    WindowState: 'Maximized',
+    WindowState: 'FullScreen',
   })
 
   if (conf.wasabi.managesettings) {
