@@ -33,7 +33,7 @@ RUN \
   cp index.html vnc.html && \
   mkdir Downloads
 
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-7784e3cf-ls114 AS buildstage
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:debianbookworm-9d98b2d5-ls120 AS buildstage
 
 # these are specified in Makefile
 ARG ARCH
@@ -81,8 +81,6 @@ RUN \
   DEBIAN_FRONTEND=noninteractive \
   apt-get remove --purge --autoremove -y \
     containerd.io \
-    cpp \
-    cpp-12 \
     docker-ce \
     docker-ce-cli \
     docker-buildx-plugin \

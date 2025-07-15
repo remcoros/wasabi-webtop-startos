@@ -1,4 +1,7 @@
 # run a compositor to get transparency effects
 xcompmgr -c &
 
-dbus-launch wassabee
+# Work around UI glitch in Wasabi by presetting the screen resolution
+xrandr --output VNC-0 --mode 1920x1080
+
+wassabee
