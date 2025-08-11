@@ -179,31 +179,6 @@ async function readSettings(effects: T.Effects): Promise<PartialInputSpec> {
 }
 
 async function writeSettings(effects: T.Effects, input: InputSpec) {
-  // clear any previous reset-rpc-auth action
-  await sdk.action.clearTask(effects, 'reset-rpc-auth')
-
-  if (
-    input.wasabi.managesettings &&
-    input.wasabi.server.selection == 'bitcoind'
-  ) {
-    console.log('using bitcoind server')
-
-    const currentConf = await store.read().once()
-    // check if we need to request new credentials
-    if (
-      !currentConf?.wasabi.server.user ||
-      !currentConf?.wasabi.server.password
-    ) {
-      console.log('resetting rpc credentials')
-
-      await sdk.action.run({
-        actionId: 'reset-rpc-auth',
-        effects,
-        input: {},
-      })
-    }
-  }
-
   await store.merge(effects, {
     title: input.title,
     username: input.username,

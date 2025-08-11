@@ -11,7 +11,8 @@ export const manifest = setupManifest({
   wrapperRepo: 'https://github.com/remcoros/wasabi-webtop-startos',
   upstreamRepo: 'https://github.com/remcoros/wasabi-webtop-startos',
   supportSite: 'https://github.com/WalletWasabi/WalletWasabi/issues',
-  docsUrl: 'https://github.com/remcoros/wasabi-webtop-startos/blob/main/instructions.md',
+  docsUrl:
+    'https://github.com/remcoros/wasabi-webtop-startos/blob/main/instructions.md',
   marketingSite: 'https://wasabiwallet.io/',
   donationUrl: 'https://wasabiwallet.io/',
   description: {
@@ -23,16 +24,7 @@ export const manifest = setupManifest({
     main: {
       arch: ['x86_64'],
       source: {
-        dockerBuild: {
-          workdir: '.',
-          dockerfile: 'Dockerfile',
-          buildArgs: {
-            WASABI_VERSION: WASABI_VERSION,
-            WASABI_VERSION_TAG: WASABI_VERSION_TAG,
-            WASABI_PGP_SIG: WASABI_PGP_SIG,
-            PLATFORM: 'amd64',
-          },
-        },
+        dockerTag: 'ghcr.io/remcoros/wasabi-webtop:2.6.0-alpha2',
       },
     },
   },
