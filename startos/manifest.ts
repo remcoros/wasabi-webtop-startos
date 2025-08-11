@@ -1,9 +1,5 @@
 import { setupManifest } from '@start9labs/start-sdk'
 
-const WASABI_VERSION = '2.6.0'
-const WASABI_VERSION_TAG = '2.6.0'
-const WASABI_PGP_SIG = '856348328949861E'
-
 export const manifest = setupManifest({
   id: 'wasabi-webtop',
   title: 'Wasabi Wallet',
