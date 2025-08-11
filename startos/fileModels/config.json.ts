@@ -23,6 +23,9 @@ const ConfigShape = object({
 export type ConfigFileType = typeof ConfigShape._TYPE
 
 export const configFile = FileHelper.json(
-  '/media/startos/volumes/userdir/.walletwasabi/client/Config.json',
+  {
+    volumeId: 'main',
+    subpath: '.walletwasabi/client/Config.json',
+  },
   ConfigShape,
 )
