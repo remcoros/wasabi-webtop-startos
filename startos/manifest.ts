@@ -20,7 +20,7 @@ export const manifest = setupManifest({
     main: {
       arch: ['x86_64'],
       source: {
-        dockerTag: 'ghcr.io/remcoros/wasabi-webtop:2.6.0-alpha2',
+        dockerTag: 'ghcr.io/remcoros/wasabi-webtop:2.6.0',
       },
     },
   },
