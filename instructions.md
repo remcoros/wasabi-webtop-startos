@@ -30,6 +30,12 @@ By default, you can find the control panel on the left side of the Webtop interf
 
 For more information about the available settings and functionalities of the control panel, please read the official KasmVNC documentation: [KasmVNC Client Documentation](https://www.kasmweb.com/kasmvnc/docs/latest/clientside.html)
 
+## Using the TOR browser
+
+Tor Browser sometimes displays random, multi-colored stripes instead of images, especially when downloading or uploading, due to its defenses against HTML5 Canvas fingerprinting. This feature, while designed to protect user privacy, can interfere with some websites or image uploads. 
+
+To resolve this, you can allow the use of canvas on the specific website by clicking the "canvas" icon in the top-left of the URL bar and selecting "Allow".
+
 ## Good Luck!
 
 Enjoy your Wasabi on Webtop experience and happy experimenting!
