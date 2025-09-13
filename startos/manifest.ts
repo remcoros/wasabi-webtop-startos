@@ -39,7 +39,10 @@ export const manifest = setupManifest({
     bitcoind: {
       description: 'Used to connect to your Bitcoin node.',
       optional: true,
-      s9pk: null,
+      metadata: {
+        title: 'A Bitcoin Full Node',
+        icon: 'https://bitcoin.org/img/icons/opengraph.png',
+      },
     },
   },
 })
