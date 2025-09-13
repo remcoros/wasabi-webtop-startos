@@ -25,7 +25,7 @@
     "http://localhost:37128/"
   ],
   "DustThreshold": "0.00005",
-  "EnableGpu": true,
+  "EnableGpu": false,
   "CoordinatorIdentifier": "CoinJoinCoordinatorIdentifier",
   "ExchangeRateProvider": "MempoolSpace",
   "FeeRateEstimationProvider": "MempoolSpace",
