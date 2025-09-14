@@ -91,16 +91,16 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
       config = {
         ...config,
         UseBitcoinRpc: true,
-        MainNetBitcoinRpcEndPoint: `${bitcoindIp}:8332`,
-        MainNetBitcoinRpcCredentialString:
+        BitcoinRpcEndPoint: `${bitcoindIp}:8332`,
+        BitcoinRpcCredentialString:
           conf.wasabi.server.user + ':' + conf.wasabi.server.password,
       }
     } else if (conf.wasabi.server.type == 'none') {
       config = {
         ...config,
         UseBitcoinRpc: false,
-        MainNetBitcoinRpcEndPoint: '127.0.0.1:8332',
-        MainNetBitcoinRpcCredentialString: '',
+        BitcoinRpcEndPoint: '127.0.0.1:8332',
+        BitcoinRpcCredentialString: '',
       }
     }
 
