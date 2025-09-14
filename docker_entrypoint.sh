@@ -78,16 +78,16 @@ if [ $(yq e '.wasabi.managesettings' /root/data/start9/config.yaml) = "true" ]; 
     BITCOIND_PASS=$(yq e '.wasabi.server.password' /root/data/start9/config.yaml)
     yq e -i "
       .UseBitcoinRpc = true |
-      .MainNetBitcoinRpcEndPoint = \"$BITCOIND_IP:8332\" |
-      .MainNetBitcoinRpcCredentialString = \"$BITCOIND_USER:$BITCOIND_PASS\"" -o=json /config/.walletwasabi/client/Config.json
+      .BitcoinRpcEndPoint = \"$BITCOIND_IP:8332\" |
+      .BitcoinRpcCredentialString = \"$BITCOIND_USER:$BITCOIND_PASS\"" -o=json /config/.walletwasabi/client/Config.json
     ;;
   "none")
     echo "Configuring Wasabi for public Bitcoin nodes"
     # reset it to default (127.0.0.1:8332), an empty string is not allowed
     yq e -i "
       .UseBitcoinRpc = false |
-      .MainNetBitcoinRpcEndPoint = \"127.0.0.1:8332\" |
-      .MainNetBitcoinRpcCredentialString = \"\"" -o=json /config/.walletwasabi/client/Config.json
+      .BitcoinRpcEndPoint = \"127.0.0.1:8332\" |
+      .BitcoinRpcCredentialString = \"\"" -o=json /config/.walletwasabi/client/Config.json
     ;;
   *)
     echo "Unknown server selected, not configuring Wasabi"

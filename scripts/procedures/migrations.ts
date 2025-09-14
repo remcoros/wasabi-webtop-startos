@@ -42,5 +42,5 @@ export const migration: T.ExpectedExports.migration =
         ),
       },
     },
-    "2.7.0"
+    "2.7.0.1"
   );
