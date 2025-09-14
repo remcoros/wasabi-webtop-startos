@@ -1,7 +1,8 @@
 id: wasabi-webtop
 title: "Wasabi"
-version: 2.7.0
+version: 2.7.0.1
 release-notes: |
+  * 2.7.0.1: Use new config values for Bitcoin RPC endpoint and credentials.
   * Update Wasabi to version 2.7.0 - See [full changelog](https://github.com/WalletWasabi/WalletWasabi/releases/tag/v2.7.0)
   * Update KASM base container image to the latest version.
 license: MIT
