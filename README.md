@@ -53,11 +53,11 @@ The manifest sets `hardwareAcceleration`, so StartOS binds whatever GPU device n
 
 Software mode uses supported controls rather than a fake device path: `AUTO_GPU=false` suppresses the image's automatic GPU mode, `SELKIES_USE_CPU=true|locked` forces and locks CPU video encoding, and `DISABLE_DRI3=true` plus `DISABLE_ZINK=true` disable the X11 GPU paths. `LIBGL_ALWAYS_SOFTWARE=true` also forces Mesa software rendering for applications. This pinned image can still populate `DRI_NODE` internally when exactly one render node is present, but the locked CPU encoder does not use it. The device nodes remain visible because hardware access is a static manifest capability.
 
-| Enable Wayland | Force Software Rendering | Effective desktop path |
-| --- | --- | --- |
-| On | Off | Wayland with automatic GPU selection |
-| Off | Off | X11 with normal GPU detection |
-| On or off | On | CPU-only X11 compatibility mode |
+| Enable Wayland | Force Software Rendering | Effective desktop path               |
+| -------------- | ------------------------ | ------------------------------------ |
+| On             | Off                      | Wayland with automatic GPU selection |
+| Off            | Off                      | X11 with normal GPU detection        |
+| On or off      | On                       | CPU-only X11 compatibility mode      |
 
 The manifest also sets `nvidiaContainer` on the image, which layers the host's NVIDIA userspace driver over the image on an NVIDIA-flavored StartOS install. On any other host that flag is a silent no-op — the overlay simply does not exist, and the package runs unchanged.
 
