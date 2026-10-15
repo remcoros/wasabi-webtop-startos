@@ -49,6 +49,12 @@ One image, pulled rather than built. It is a community-maintained image that lay
 | `main`               | The `primary` daemon — the desktop, and the one to `attach` to          |
 | `read-bitcoind-conf` | Short-lived, during init only; reads Bitcoin's `bitcoin.conf` read-only |
 
+The desktop is streamed by Selkies 2. Browser camera forwarding is enabled on demand: opening the wallet's QR scanner requests access to the viewer's camera, rather than a camera attached to the server. Camera access requires a supported browser and a trusted HTTPS origin; Tor Browser can display the desktop but does not expose its camera. Desktop audio output and microphone forwarding are disabled and locked. The third-party proot application gallery, its installer and catalogue fetch are removed; the terminal, file manager, editor and sudo remain available.
+
+Streaming defaults to 30 fps with Turbo off, and the desktop follows the browser size automatically. The Selkies side panel retains the 8–120 fps adjustment range and the Turbo toggle. Saved browser preferences take precedence over these defaults.
+
+The upgrade migration removes only exact, unmodified copies of proot-apps 0.3.2 tools from `/config/.local/bin`, identified by their published release hashes. Modified tools, symlinks, other user files and installed application data are retained. The existing `.bashrc` PATH entry is also retained for user-installed tools.
+
 The manifest sets `hardwareAcceleration`, so StartOS binds whatever GPU device nodes the host has (`/dev/dri`, `/dev/nvidia*`, `/dev/kfd`) into the container. **Enable Wayland** selects the image's modern Wayland backend and defaults to on; turning it off selects the older X11 backend without otherwise disabling GPU use. A present but incompatible device can prevent automatic fallback and leave the Web UI blank or unstable. **Force Software Rendering** is the compatibility override for that case: it takes precedence over **Enable Wayland**, selects X11, disables DRI3/Zink application acceleration and automatic GPU selection, and forces and locks Selkies CPU video encoding. Software Wayland is deliberately not selected because Wasabi and the bundled file manager are X11 applications, and their Xwayland windows render black when the Wayland stack has no usable graphics device.
 
 Software mode uses supported controls rather than a fake device path: `AUTO_GPU=false` suppresses the image's automatic GPU mode, `SELKIES_USE_CPU=true|locked` forces and locks CPU video encoding, and `DISABLE_DRI3=true` plus `DISABLE_ZINK=true` disable the X11 GPU paths. `LIBGL_ALWAYS_SOFTWARE=true` also forces Mesa software rendering for applications. This pinned image can still populate `DRI_NODE` internally when exactly one render node is present, but the locked CPU encoder does not use it. The device nodes remain visible because hardware access is a static manifest capability.
@@ -182,7 +188,7 @@ A restored instance is usable immediately: the same desktop credentials, the sam
 
 1. **x86_64 only.** The image is not built for aarch64 or riscv64, and the manifest sets `emulateMissing: false`, so the package is not offered on those hosts — a full desktop under emulation is not a usable experience.
 2. **No USB, so no hardware wallets.** Nothing is passed through to the container, so Coldcard, Trezor, Ledger and friends cannot be used. This is the single biggest difference from running Wasabi on a laptop.
-3. **No camera**, so QR codes cannot be scanned — paste instead.
+3. **Browser camera requirements.** QR scanning needs a supported browser over trusted HTTPS and permission to use its camera. Tor Browser does not provide camera access; paste addresses when a camera is unavailable.
 4. **One session.** The desktop is a single X session; opening the Web UI in a second browser attaches to the same one rather than starting another.
 5. **Some settings are not yours while "Apply Settings On Startup" is on.** See [File Models](#file-models) for exactly which, and how to take them back.
 6. **Tor is Wasabi's own, not the StartOS one.** The "Use Tor" toggle configures the Tor client bundled inside Wasabi. It is unrelated to whether StartOS publishes this service's interfaces over Tor.

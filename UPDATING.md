@@ -15,24 +15,24 @@ A new Wasabi release is only installable here once `wasabi-webtop` has cut a mat
   gh release view -R WalletWasabi/WalletWasabi --json tagName -q .tagName
   ```
 
-- **Latest image tag that actually exists:**
+- **Confirm that a candidate image tag exists:**
 
   ```sh
-  gh api repos/remcoros/wasabi-webtop/tags --jq '.[0].name'
+  docker manifest inspect 'ghcr.io/remcoros/wasabi-webtop:<candidate-tag>'
   ```
 
-  These are usually the same string minus the leading `v`, but not always — the image repo cuts its own revisions (e.g. `v2.7.2.1` against Wasabi 2.7.2) when only the desktop changes.
+  Choose a candidate from the image repository releases and confirm its registry manifest above. A git tag alone does not prove the image has been published. Wallet and image versions are usually the same string minus the leading `v`, but not always — the image repo cuts its own revisions (e.g. `v2.7.2.1` against Wasabi 2.7.2) when only the desktop changes.
 
 The current pin lives in `startos/versions/current.ts` as `WASABI_VERSION`, which `startos/manifest/index.ts` interpolates into `images.main.source.dockerTag`.
 
 ## Applying the bump
 
 1. Set `WASABI_VERSION` in `startos/versions/current.ts` to the image tag without its leading `v`.
-2. Bump `version` in the same file to the new Wasabi version with the downstream revision reset to `:1`, and rewrite `releaseNotes` in all five locales — summarise the upstream highlights and link the Wasabi release.
+2. Bump `version` in the same file to the new Wasabi version with the downstream revision reset to `:0`, and rewrite `releaseNotes` in all five locales — summarise the upstream highlights and link the Wasabi release. If the outgoing `current.ts` has a nonempty `up` migration, first move it to a version-named historical file, rename its export, and add it to `versions/index.ts`; migrations stay attached to the version that introduced them.
 3. Confirm the image tag resolves before building:
 
    ```sh
-   docker manifest inspect ghcr.io/remcoros/wasabi-webtop:<version>
+   docker manifest inspect 'ghcr.io/remcoros/wasabi-webtop:<version>'
    ```
 
 4. `make x86` — the image is x86_64 only, so `ARCHES := x86` in the `Makefile` is deliberate.

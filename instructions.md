@@ -30,7 +30,13 @@ If Bitcoin has just turned on block filters, it needs time to build the index be
 
 ### The desktop
 
-The Web UI is the whole desktop, not just Wasabi. Wasabi starts maximized and is the only thing you normally need; a file manager, a terminal and a text editor are also there if you want them. Closing the browser tab leaves the session running — reopening it puts you back where you were.
+The Web UI is the whole desktop, not just Wasabi. Wasabi starts maximized and is the only thing you normally need; a file manager, a terminal and a text editor are also there if you want them. Closing the browser tab leaves the session running — reopening it puts you back where you were. The side panel lets you adjust the frame rate from 8–120 fps and turn Turbo on or off. Streaming defaults to 30 fps with Turbo off; any choices already saved in your browser are kept.
+
+### QR scanning with your camera
+
+Open the Web UI over trusted HTTPS in a browser that supports camera access. Open the wallet's QR scanner and allow camera access when your browser asks. The camera on the machine running your browser is forwarded only when requested by the scanner. If the scanner times out while you grant permission, close and reopen it.
+
+Tor Browser can display and control the desktop but does not provide camera access. Paste addresses or import files when a camera is unavailable.
 
 ### Settings
 
@@ -53,4 +59,5 @@ Turning on **Enable JSON-RPC** in Settings publishes a second interface for driv
 ## Limitations
 
 - **USB devices are not available**, so hardware wallets — Coldcard, Trezor, Ledger and the rest — cannot be used here.
-- **There is no camera**, so QR codes cannot be scanned. Paste addresses instead.
+- **Camera access requires a supported browser over trusted HTTPS.** Tor Browser does not provide camera access; paste addresses when a camera is unavailable.
+- **Desktop audio output, microphone forwarding and the application gallery are disabled.** The file manager, editor and terminal remain available.
