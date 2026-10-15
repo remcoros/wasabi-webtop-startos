@@ -35,6 +35,7 @@ export const uiCredentials = sdk.Action.withoutInput(
             copyable: true,
             masked: false,
             qr: false,
+            launchable: false,
           },
           {
             type: 'single',
@@ -44,6 +45,7 @@ export const uiCredentials = sdk.Action.withoutInput(
             copyable: true,
             masked: true,
             qr: false,
+            launchable: false,
           },
         ],
       },
