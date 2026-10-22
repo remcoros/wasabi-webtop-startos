@@ -35,11 +35,7 @@ export const manifest = setupManifest({
   images: {
     main: {
       source: {
-        dockerBuild: {
-          buildArgs: {
-            IMAGE: 'ghcr.io/remcoros/wasabi-webtop:' + WASABI_VERSION,
-          },
-        },
+        dockerTag: 'ghcr.io/remcoros/wasabi-webtop:' + WASABI_VERSION,
       },
       arch: ['x86_64'],
       emulateMissing: false,
