@@ -28,7 +28,7 @@ The current pin lives in `startos/versions/current.ts` as `WASABI_VERSION`, whic
 ## Applying the bump
 
 1. Set `WASABI_VERSION` in `startos/versions/current.ts` to the image tag without its leading `v`.
-2. Bump `version` in the same file to the new Wasabi version with the downstream revision reset to `:0`, and rewrite `releaseNotes` in all five locales — summarise the upstream highlights and link the Wasabi release. If the outgoing `current.ts` has a nonempty `up` migration, first move it to a version-named historical file, rename its export, and add it to `versions/index.ts`; migrations stay attached to the version that introduced them.
+2. Bump `version` in the same file to the new Wasabi version with the downstream revision reset to `:0` (for image-only updates, keep the Wasabi version and increment the downstream revision), and rewrite `releaseNotes` in all five locales — summarise the upstream highlights and link the Wasabi or container release. If the outgoing `current.ts` has a nonempty `up` migration, first move it to a version-named historical file, rename its export, and add it to `versions/index.ts`; migrations stay attached to the version that introduced them.
 3. Confirm the image tag resolves before building:
 
    ```sh
