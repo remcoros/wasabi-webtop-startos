@@ -36,11 +36,11 @@ Wasabi Wallet is a privacy-focused Bitcoin desktop wallet. It has no web interfa
 
 ## Image and Container Runtime
 
-One image, pulled rather than built. It is a community-maintained image that layers Wasabi and an openbox desktop onto LinuxServer's Selkies base, and it is built in its own repository — **nothing in this repository can change what is inside the container.**
+One image, a community-maintained one that layers Wasabi and an openbox desktop onto LinuxServer's Selkies base, built in its own repository. The root `Dockerfile` adds a single temporary layer that upgrades its CA store; it comes out once that image is rebuilt on a fixed store. **Anything else inside the container can only change upstream.**
 
 | Property      | Value                                   |
 | ------------- | --------------------------------------- |
-| Image         | `ghcr.io/remcoros/wasabi-webtop`        |
+| Image         | `ghcr.io/remcoros/wasabi-webtop` + root `Dockerfile` (temporary CA-store upgrade) |
 | Architectures | x86_64 only; not offered on other hosts |
 | Entrypoint    | The image's own, via `useEntrypoint`    |
 
@@ -200,7 +200,7 @@ A restored instance is usable immediately: the same desktop credentials, the sam
 
 ```yaml
 package_id: wasabi-webtop
-image: ghcr.io/remcoros/wasabi-webtop
+image: ghcr.io/remcoros/wasabi-webtop + root Dockerfile (CA store upgrade)
 architectures:
   - x86_64
 subcontainers:
