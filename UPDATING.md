@@ -28,19 +28,14 @@ The current pin lives in `startos/versions/current.ts` as `WASABI_VERSION`, whic
 ## Applying the bump
 
 1. Set `WASABI_VERSION` in `startos/versions/current.ts` to the image tag without its leading `v`.
-2. Bump `version` in the same file to the new Wasabi version with the downstream revision reset to `:0` (for image-only updates, keep the Wasabi version and increment the downstream revision), and rewrite `releaseNotes` in all five locales — summarise the upstream highlights and link the Wasabi or container release. If the outgoing `current.ts` has a nonempty `up` migration, first move it to a version-named historical file, rename its export, and add it to `versions/index.ts`; migrations stay attached to the version that introduced them.
-3. Confirm the image tag resolves before building:
+2. Confirm the image tag resolves before building:
 
    ```sh
    docker manifest inspect 'ghcr.io/remcoros/wasabi-webtop:<version>'
    ```
-
-4. `make x86` — the image is x86_64 only, so `ARCHES := x86` in the `Makefile` is deliberate.
 
 ## Two things to re-check on every bump
 
 **The config schema number.** `wasabiConfigVersion` in `startos/utils.ts` must equal the `ConfigVersion` in upstream's `PersistentConfigManager.DefaultMainNetConfig` (`WalletWasabi.Client/Configuration/PersistentConfigManager.cs`). `main.ts` stamps it onto the freshly seeded `Config.json` because the image seeds a schema number Wasabi rejects — see `AGENTS.md`. If a release introduces a genuinely newer schema with a real migration, bump the constant rather than leaving the old value stamped on, or the migration is skipped.
 
 **The keys the package writes.** If the release changes anything Wasabi reads out of `Config.json` or `UiConfig.json`, check `startos/fileModels/` against both the new seed files in the image repo's `root/defaults/.walletwasabi/client/` and the decoder in upstream's `WalletWasabi.Client/Configuration/Serialization.cs`, which is the authority on key names and which are required.
-
-After any bump, verify on hardware that the **first** start reaches the node: the log must show `Starting Bitcoin Rpc Interface Monitoring` and must not show `No Bitcoin Node RPC was configured. Trying P2P synchronization.`
