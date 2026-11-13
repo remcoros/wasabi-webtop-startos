@@ -7,7 +7,8 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
   const multi = sdk.MultiHost.of(effects, 'main')
   const uiOrigin = await multi.bindPort(uiPort, {
     protocol: 'http',
-    addSsl: { addXForwardedHeaders: true },
+    addSsl: {},
+    proxy: { addXForwardedHeaders: true },
   })
 
   const ui = sdk.createInterface(effects, {
@@ -31,7 +32,8 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
   if (jsonRpcServerEnabled) {
     const rpcOrigin = await multi.bindPort(jsonRpcPort, {
       protocol: 'http',
-      addSsl: { addXForwardedHeaders: true },
+      addSsl: {},
+      proxy: { addXForwardedHeaders: true },
     })
     const rpc = sdk.createInterface(effects, {
       name: i18n('JSON-RPC'),
