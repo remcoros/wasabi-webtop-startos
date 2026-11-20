@@ -44,10 +44,9 @@ One image, a community-maintained one that layers Wasabi and an openbox desktop 
 | Architectures | x86_64 only; not offered on other hosts |
 | Entrypoint    | The image's own, via `useEntrypoint`    |
 
-| Subcontainer         | Purpose                                                                 |
-| -------------------- | ----------------------------------------------------------------------- |
-| `main`               | The `primary` daemon — the desktop, and the one to `attach` to          |
-| `read-bitcoind-conf` | Short-lived, during init only; reads Bitcoin's `bitcoin.conf` read-only |
+| Subcontainer | Purpose                                                        |
+| ------------ | -------------------------------------------------------------- |
+| `main`       | The `primary` daemon — the desktop, and the one to `attach` to |
 
 The desktop is streamed by Selkies 2. Browser camera forwarding is enabled on demand: opening the wallet's QR scanner requests access to the viewer's camera, rather than a camera attached to the server. Camera access requires a supported browser and a trusted HTTPS origin; Tor Browser can display the desktop but does not expose its camera. Desktop audio output and microphone forwarding are disabled and locked. The third-party proot application gallery, its installer and catalogue fetch are removed; the terminal, file manager, editor and sudo remain available.
 
@@ -110,13 +109,13 @@ Wasabi writes both files with a UTF-8 byte-order mark, which the JSON models can
 
 One, and it is optional — Wasabi will run against its own network backend if you have no node.
 
-| Dependency | Required | Mounted                                    | Why                                                        |
-| ---------- | -------- | ------------------------------------------ | ---------------------------------------------------------- |
-| `bitcoind` | Optional | `main` volume, read-only, during init only | Fetch blocks and broadcast transactions over your own node |
+| Dependency | Required | Mounted | Why                                                        |
+| ---------- | -------- | ------- | ---------------------------------------------------------- |
+| `bitcoind` | Optional | Nothing | Fetch blocks and broadcast transactions over your own node |
 
 The dependency is only enabled when **Settings** has both "Apply Settings On Startup" enabled and the Bitcoin node set to "Local Node"; otherwise it is not a current dependency. It accepts Bitcoin 28.4:29, 29.4:16, 30.3:16 or 31.1:16 or later on its major line, or Bitcoin Knots (pre-RDTS) 29.3:29 or later. There is no health-check gate — the package resolves Bitcoin's RPC bridge address at startup and fails to start if it cannot, rather than waiting on Bitcoin to be synced.
 
-The read-only mount exists for one purpose: to read `bitcoin.conf` and check whether the RPC user this package generated for itself has been registered on the Bitcoin side yet. Nothing is ever written through it.
+None of Bitcoin's volumes is mounted. To learn whether the RPC credential this package generated for itself is registered on the Bitcoin side, init calls Bitcoin's RPC (`uptime`) over the bridge with that credential, whenever this service initializes or its settings change and whenever Bitcoin starts and its RPC port comes up. A `401` raises the credential task, a success clears it, and anything else — Bitcoin stopped, unreachable, or still starting — leaves the task as it was.
 
 ## Network Access and Interfaces
 
@@ -157,10 +156,10 @@ Three, all `critical` — the package raises one on itself and two on Bitcoin's 
 | Task                              | Where it appears | Raised when                                                                             | Cleared by                                        |
 | --------------------------------- | ---------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | Choose a username and password    | This service     | On install, when no settings file exists yet                                            | Running **Settings** once                         |
-| Create RPC credentials for Wasabi | Bitcoin          | Bitcoin's `bitcoin.conf` has no `rpcauth` entry for the username this package generated | Running Bitcoin's credential action from the task |
+| Create RPC credentials for Wasabi | Bitcoin          | A credential is generated, or Bitcoin's RPC answers `401` to the one this package holds | Running Bitcoin's credential action from the task |
 | Enable Compact Block Filters      | Bitcoin          | Bitcoin's `blockfilterindex` setting is off                                             | Turning it on in Bitcoin's **Other Settings**     |
 
-The two Bitcoin tasks only apply while the node selection is "Local Node". Switching to "None" clears the credential task, and StartOS hides the block-filter task so it no longer blocks anything; it returns if "Local Node" is selected again and the setting is still off. They can return — the credential task comes back if the `rpcauth` entry is later removed, and the block-filter task re-raises whenever the setting is turned back off, because it re-checks rather than firing once.
+The two Bitcoin tasks only apply while the node selection is "Local Node". Switching to "None" clears the credential task, and StartOS hides the block-filter task so it no longer blocks anything; it returns if "Local Node" is selected again and the setting is still off. They can return — the credential task comes back once Bitcoin's RPC rejects the credential (its `rpcauth` entry removed, or Bitcoin reinstalled or reset), checked each time Bitcoin starts, and the block-filter task re-raises whenever the setting is turned back off, because it re-checks rather than firing once.
 
 The credential task supplies both the username and the password and renders them read-only, so the user cannot edit them. Bitcoin refuses a password shorter than its own floor, which is why this package rotates a too-short credential itself before raising the task rather than raising one the user could never submit.
 
@@ -174,7 +173,7 @@ One, on the only daemon.
 
 Any HTTP response counts as healthy, including the `401` that Basic Auth returns before you log in — the check is asking "is the desktop serving", not "are your credentials right". A failure that clears within a minute or so of starting is the desktop still coming up. One that persists means the container did not start: check the service logs, and expect either a settings file the package could not parse or a Wasabi config file it could not read.
 
-**A green check says nothing about how Wasabi is getting its blocks**, and that is the gap worth knowing, because falling back to public peers is a privacy question rather than a visible fault. The service log settles it: `Starting Bitcoin Rpc Interface Monitoring` means Wasabi is on your node, and `No Bitcoin Node RPC was configured. Trying P2P synchronization.` means it is not. When it is not, check three things in order — that Bitcoin is running, that its `bitcoin.conf` still carries the `rpcauth` entry for the username this package generated (the credential task re-raises when it does not, and running it restores the entry after Bitcoin was reinstalled or reset), and that "Apply Settings On Startup" is on, since with it off the connection is yours to configure inside Wasabi. A wallet that stays green while never finding its transactions is the neighbouring case: compact block filters are off on the Bitcoin side, the block-filter task re-raises whenever they are, and Bitcoin has to build the index before Wasabi can use it.
+**A green check says nothing about how Wasabi is getting its blocks**, and that is the gap worth knowing, because falling back to public peers is a privacy question rather than a visible fault. The service log settles it: `Starting Bitcoin Rpc Interface Monitoring` means Wasabi is on your node, and `No Bitcoin Node RPC was configured. Trying P2P synchronization.` means it is not. When it is not, check three things in order — that Bitcoin is running, that Bitcoin still accepts the RPC credential this package generated (the credential task re-raises when Bitcoin's RPC rejects it, and running it restores the entry after Bitcoin was reinstalled or reset), and that "Apply Settings On Startup" is on, since with it off the connection is yours to configure inside Wasabi. A wallet that stays green while never finding its transactions is the neighbouring case: compact block filters are off on the Bitcoin side, the block-filter task re-raises whenever they are, and Bitcoin has to build the index before Wasabi can use it.
 
 ## Backups and Restore
 
@@ -182,7 +181,7 @@ Both volumes are copied wholesale — `sdk.Backups.ofVolumes('main', 'userdir')`
 
 Nothing is excluded, which means the block-filter and transaction cache under `.walletwasabi/client/BitcoinStore/` is in the backup too. It is rebuildable and inflates the archive; the image ships a `.backupignore` naming it, but that file is a convention of other backup systems and StartOS does not read it, so it has no effect here.
 
-A restored instance is usable immediately: the same desktop credentials, the same wallets, the same labels. If it was using a local node, that node must be installed and must still carry the `rpcauth` entry for the RPC username in the restored settings file — if it does not, the credential task will re-raise on Bitcoin's page and clear once you run it.
+A restored instance is usable immediately: the same desktop credentials, the same wallets, the same labels. If it was using a local node, that node must be installed and must still accept the RPC credential in the restored settings file — if it does not, the credential task re-raises on Bitcoin's page once Bitcoin's RPC is up, and clears once you run it.
 
 ## Limitations and Differences
 
@@ -205,7 +204,6 @@ architectures:
   - x86_64
 subcontainers:
   - main # the primary daemon, the desktop
-  - read-bitcoind-conf # init-time only, reads bitcoin.conf read-only
 volumes:
   userdir: /config # wallet files, keys, Wasabi config
   main: /root/data # package settings only
